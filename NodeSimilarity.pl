@@ -95,13 +95,20 @@ foreach $line(@INTMP){ #  For each line "nodeA nodeB weight type"
     }
     $nodes2key{$nodeA}=1; # Store the nodes
     $nodes2key{$nodeB}=1;    
-    $edgeTmp=$nodeA.'KKK'.$nodeB; # Create a single identifier for the edge
-    push(@{$edge2node{$edgeTmp}},$nodeA); # Relate the edge to their nodes, it may be done simply recovering 
-    push(@{$edge2node{$edgeTmp}},$nodeB); # them from the new edge identifier, but this will be faster
+    $edgeTmp=$nodeA.'KKK'.$nodeB; # Create a single identifier for the edge (not used in this version)
+    push(@{$edge2node{$edgeTmp}},$nodeA); # Relate the edge to their nodes, it may be done simply recovering  (not used in this version)
+    push(@{$edge2node{$edgeTmp}},$nodeB); # them from the new edge identifier, but this will be faster  (not used in this version)
     $edge2weight{$nodeA}{$nodeB}=$weight; # This structure basically codify every line
-    $edge2weight{$nodeB}{$nodeA}=$weight;
     $edge2type{$nodeA}{$nodeB}=$type; # This structure basically codify every line
+    $edge2weight{$nodeB}{$nodeA}=$weight;
     $edge2type{$nodeB}{$nodeA}=$type;
+    if($directed == 0){
+	$edge2dir{$nodeA}{$nodeB}=0;
+	$edge2dir{$nodeB}{$nodeA}=0;
+    }else{
+	$edge2dir{$nodeA}{$nodeB}=1;
+	$edge2dir{$nodeB}{$nodeA}=0;
+    }
     push(@{$neighbour{$nodeA}},$nodeB); # Store for every node its neighbours
     push(@{$neighbour{$nodeB}},$nodeA);    
 } # End foreach reading file
@@ -199,18 +206,14 @@ for($i=0; $i<$Nnodes; $i++){ # Edge 1
 		# In any other situation it is a neighbour, we just need to control that the type is the same
 		if($edge2weight{$nodeA}{$neighTmpA}){ # This is implicit in the loop above and
 		    if($edge2weight{$nodeB}{$neighTmpB}){ # is not needed. Just to ctrl everything is ok
-			$pass=0; # control variable to count the shared neighbours
-			if(($nodeA eq $neighTmpA)||($nodeB eq $neighTmpB)){ # If it is the link between them we want to count it
-			    $pass=1;
-			}elsif($edge2type{$nodeA}{$neighTmpA} == $edge2type{$nodeB}{$neighTmpB}){ # also f they belong to the same type
-			    $pass=1;
-			}
-			if($pass == 1){ # Only those that pass the above filters
-			    $Wac=$edge2weight{$nodeA}{$neighTmpA};
-			    $Wbc=$edge2weight{$nodeB}{$neighTmpB};
-			    $Wprod=abs($Wac)*abs($Wbc);
-			    $Wab+=$Wprod;
-			    $Nab+=1;				
+			if(($nodeA eq $neighTmpA)||($nodeB eq $neighTmpB)||($edge2type{$nodeA}{$neighTmpA} == $edge2type{$nodeB}{$neighTmpB})){ # if it is a link between them or, being against a third, have the same type 
+			    if($edge2dir{$nodeA}{$neighTmpA} == $edge2dir{$nodeB}{$neighTmpB}){ # and the same direction
+				$Wac=$edge2weight{$nodeA}{$neighTmpA};
+				$Wbc=$edge2weight{$nodeB}{$neighTmpB};
+				$Wprod=abs($Wac)*abs($Wbc);
+				$Wab+=$Wprod;
+				$Nab+=1;				
+			    }
 			}
 			#if(!$edge2type{$nodeB}{$neighTmpB}){
 			#    print join(', ',' *** Control: nodeB',$nodeB,'tmpB',$neighTmpB,'Wbc',$edge2type{$nodeB}{$neighTmpB}),"\n"; # DEBUG

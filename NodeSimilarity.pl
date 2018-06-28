@@ -69,9 +69,12 @@ print "  \n";
 
 # --- Print the information collected
 
-&printParameters($fieldNodeA,$fieldNodeB,$fieldType,$Weighted,$fileIn);
+#&printParameters($fieldNodeA,$fieldNodeB,$fieldType,$Weighted,$fileIn);
+&printParameters();
 
 # --- Read the network and build hashes
+print " \n";
+print ">> Reading the network: \n";
 $ctrl=-1;
 foreach $line(@INTMP){ #  For each line "nodeA nodeB weight type"
     #print join(' ',' ... Reading: ',$line),"\n";  # DEBUG
@@ -85,14 +88,15 @@ foreach $line(@INTMP){ #  For each line "nodeA nodeB weight type"
     $nodeA=$fields[$fieldNodeA];
     $nodeB=$fields[$fieldNodeB];
     $type=$fields[$fieldType];
-    if($ctrl==0){
-	if(!$type || !$fields[$fieldWeight]){print "~ Problems with file format, check type and weight fields. Exit...\n";exit;}		     
-    }
     if($Weighted==0){	
 	$weight=1;	  
     }else{
 	$weight=$fields[$fieldWeight];	    
     }
+    print join(" ",'~~~ Reading fields ',$nodeA,$nodeB,$type,$weight),"\n";
+    #if($ctrl==0){
+	#if(!$type || !$weight){print "~ Problems with file format, check type and weight fields. Exit...\n";exit;}		     
+    #}
     $nodes2key{$nodeA}=1; # Store the nodes
     $nodes2key{$nodeB}=1;    
     $edgeTmp=$nodeA.'KKK'.$nodeB; # Create a single identifier for the edge (not used in this version)
@@ -120,7 +124,7 @@ $Nedges = $#Edges;
 @Nodes = keys%nodes2key;
 $Nnodes = $#Nodes;
 
-print "  \n";
+#print "  \n";
 print join(' ','~~~ The number of edges is: ',$Nedges+1),"\n";
 print join(' ','~~~ The number of nodes is: ',$Nnodes+1),"\n";
 print "  \n";
@@ -129,7 +133,8 @@ print "  \n";
 # For every node_i, we define a vector a_i=(A_i1,...,A_ii,...,A_iN)
 # where A_ii=mean(A_ij) (i != j)  and A_ij=W_ij. We need to compute from this vector
 # the term A_ii and the term abs(a_i*a_i), where * stands for scalar product.
-
+print " \n";
+print " >> Pre-processing coefficients \n";
 foreach $nodeTmp(@Nodes){ # For each node
     $AvWij=0;
     $Av2Wij=0;
@@ -164,6 +169,8 @@ print OUT0 '# >> Silwood Park, Imperial College London, A.P-G.', "\n";
 print OUT0 '# >>1NodeA, 2NodeB, 3TanimotoCoeff, 4JaccardCoeff, 5SharedNeighs, 6NeighsA, 7NeighsB',"\n";
 
 # Start computing
+print " \n";
+print " >> Start main computation  \n";
 print '~~~ Computing similarities between nodes...',"\n";
 
 $ctrl=1; # vars to control the timeline of the computation, no worries with this
@@ -216,7 +223,7 @@ for($i=0; $i<$Nnodes; $i++){ # Edge 1
 			    }
 			}
 			#if(!$edge2type{$nodeB}{$neighTmpB}){
-			#    print join(', ',' *** Control: nodeB',$nodeB,'tmpB',$neighTmpB,'Wbc',$edge2type{$nodeB}{$neighTmpB}),"\n"; # DEBUG
+			    print join(', ',' *** Control: nodeB',$nodeB,'tmpB',$neighTmpB,'Wbc',$edge2type{$nodeB}{$neighTmpB}),"\n"; # DEBUG
 			#    #exit;
 			#}
 			#print join(', ',' *** Control: i',$i,'j',$j,'Wac',$Wac,'Wbc',$Wbc),"\n"; # DEBUG
@@ -259,58 +266,50 @@ print '  ',"\n";
 # Print the different input parameters and choices to the standard output
 
 sub readParameters{
-    if($ARGV[0] eq "-h"){
-	&helpme();
-    }elsif($ARGV[0] eq "-W"){
-	if(!looks_like_number($ARGV[1])){
-	    print " \n";
-	    print ">> Input argument error for  NodeSimilarity.pl: \n";
-	    print $ARGV[1]," is not a valid Weight flag \n";
-	    print ">> run  ./NodeSimilarity.pl -h for help \n";
-	    print " \n";
-	    exit;
-	}else{
-	    $Weighted=$ARGV[1];
-	}
-	if(!$ARGV[2]){
-	    print " \n";
-	    print ">> Input argument error for NodeSimilarity.pl: \n";
-	    print ">> input file name missing \n";
-	    exit;
-	}else{	
-	    $fileIn=$ARGV[2];
-	}
-    }else{
-	if(looks_like_number($ARGV[0])){
-	    print " \n";
-	    print ">> Input argument error for NodeSimilarity.pl: \n";
-	    print $ARGV[0]," is not a valid file name \n";
-	    print ">> run  ./NodeSimilarity.pl -h for help \n";
-	    print " \n";
-	    exit;
-	}else{
-	    $fileIn=$ARGV[0];
-	}
-	if($ARGV[1] ne "-W"){
-	    print " \n";
-	    print ">> Input argument error for  NodeSimilarity.pl: \n";
-	    print " -W flag expected instead of $ARGV[1] \n";
-	    print ">> run  ./NodeSimilarity.pl -h for help \n";
-	    print " \n";
-	    exit;
-	}else{
-	    if(!looks_like_number($ARGV[2])){
+
+    
+    $messageOk{"-w"}="~~~ The network is weighted=1/unweighted=0? Value = ";
+    $messageOk{"-d"}="~~~ The network is directed=1/undirected=0? Value = ";;
+    $messageOk{"-f"}="~~~ The network file is = ";
+    $messageErr{"-w"}="~~~ The value for network weight argument is not numeric = ";
+    $messageErr{"-d"}="~~~ The value for network weight argument is not numeric = ";;
+    $messageErr{"-f"}="~~~ This is not a valid name for a file = ";  
+    $typeArg{"-d"}=1;
+    $typeArg{"-w"}=1;
+    $typeArg{"-f"}="string";
+
+    
+    if($ARGV[0] eq "-h"){ # If help is needed exit
+	&helpme();	
+    }
+    $Nargs=$#ARGV;
+    if($Nargs != 5){ # If there are missing arguments exit
+	print " \n";
+	print ">> Missing input arguments: \n";
+	print ">> run  ./NodeSimilarity.pl -h for help \n";
+	print " \n";
+	exit;	
+    }else{ # Otherwise
+	print ">> Reading input arguments: \n";
+	for($i=0; $i<$Nargs; $i=$i+2){ # For each flag 
+	    if(looks_like_number($ARGV[$i+1]) eq looks_like_number($typeArg{$ARGV[$i]})){ # Check if the value passed for the argument makes sense
+		$loadVar{$ARGV[$i]}=$ARGV[$i+1]; # load the value
+		#print " \n";
+		print $messageOk{$ARGV[$i]},$loadVar{$ARGV[$i]},"\n";
+		#print " \n";
+	    }else{
 		print " \n";
-		print ">> Input argument error for  NodeSimilarity.pl: \n";
-		print $ARGV[2]," is not a valid Weight flag \n";
+		print $messageErr{$ARGV[$i]},$ARGV[$i+1],"\n";
 		print ">> run  ./NodeSimilarity.pl -h for help \n";
+		print ">> Leaving the script... \n";
 		print " \n";
 		exit;
-	    }else{
-		$Weighted=$ARGV[2];
 	    }
 	}
     }
+    $Weighted=$loadVar{"-w"};
+    $directed=$loadVar{"-d"};
+    $fileIn=$loadVar{"-f"};
     if($Weighted == 0){
 	$fieldNodeA=0; # Indicate the column where the first source node is found (minus one)
 	$fieldNodeB=1; # where the target node is found (minus one)
@@ -334,7 +333,9 @@ sub readParameters{
 # Print the different input parameters and choices to the standard output
 
 sub printParameters{
-    my ($fieldNodeA,$fieldNodeB,$fieldType,$Weighted,$fileIn)=@_;
+    #my ($fieldNodeA,$fieldNodeB,$fieldType,$Weighted,$fileIn)=@_;
+    print " \n";
+    print ">> Processing input arguments: \n";
     print '~~~ Reading Node A from column ',$fieldNodeA+1,"\n";
     print '~~~ Reading Node B from column ',$fieldNodeB+1,"\n";
     if($Weighted==0){

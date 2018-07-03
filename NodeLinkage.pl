@@ -12,7 +12,7 @@
 # is the main reason why we develop new code and we do not
 # use previous implementations of classical agglomerative clusterings.
 # The script is able to compute three types of clustering Single, Complete
-# and Average Linkage. If not threshold or clustering step to stop is provided,
+# and Average Linkage. If no threshold or clustering step to stop is provided,
 # it will return as output a matrix with the step and threshold at which
 # the two elements where joined into the same cluster "Matrix2dendogram". This file is useful to
 # build a dendogram. Another output is a "History"
@@ -27,25 +27,8 @@
 # The idea is to run the algorithm with no stopping point and then analyse the Partition 
 # Density looking for a maximum, which would be the stopping point. You will re-run
 # then the algorithm.
-#
-# INPUT: A similarity matrix (all against all) between nodes obtained from 
-#        the network topology (NodeSimilarity.pl), with the format:
-#        "NodeA" "NodeB"   Similarity 
-#        The network from which the above matrix was derived, with the format:
-#        "NodeA" "NodeB"   Weight
-#        If the name of the file is "Network"-$label, $label will be used for
-#        the name of the output, otherwise you will find simple names.
-# OUTPUT: "HistExtend"."NoStop".$InputFile
-#         "HistCompact"."NoStop".$InputFile
-#  - With stopping point:
-#         "HistExtend"."StopCriteria".$InputFile
-#         "HistCompact"."StopCriteria".$InputFile
-#         "Matrix2Clusters_EdgeLinkage"."StopCriteria".$InputFile 
-#         "Clusters_EdgeLinkage"."StopCriteria".$InputFile
-#
-# USAGE: ./NodeLinkage $path2SimilarityMatrix $path2OriginalNetwork
-#        In addition, there are some parameters you should control, 
-#        see the first section of the code.
+#  
+# Execute for help: ./NodeLinkage.pl -h     
 #
 #########################################
 # Silwood Park (Imperial College London)
@@ -56,26 +39,14 @@
 # --- Modules used
 use POSIX;
 use List::Util qw( min max );
+use Scalar::Util qw(looks_like_number);
+
 # use strict;
 # use warnings;
 
-# --- Fix parameters here:
+# --- Read the user arguments:
 
-#... clustering type
-$LinkCode=2; # 0=Single Linkage; 1=Complete Linkage; 2=Average Linkage
-$Linkage[0]="Single"; $Linkage[1]="Complete"; $Linkage[2]="Average";
-$StopStep=129; # Zero to cluster until the last step, an integer to stop at some step
-$StopThr=0; # Zero to cluster until the last step, a threshold to stop at some step
-
-#... Fields to read from the first file (similarity between nodes due to the network structure)
-$fieldNodeSimA=0; # Indicate the column where the first source node is found minus one
-$fieldNodeSimB=1; # where the target node is found (minus one)
-$fieldSim=2; # and their similarity (again minus one).  
-
-#... Fields to read from the second file (original network)
-$fieldNodeNetA=0; # Indicate the column where the first source node is found minus one
-$fieldNodeNetB=1; # where the target node is found (minus one)
-$fieldWeight=2; # and their similarity (again minus one).  
+&readParameters();
 
 # --- Print the information collected to the standard output
 
@@ -85,21 +56,21 @@ print "* Finding communities with nodes clustering   *  \n";
 print "***********************************************  \n";
 print "  \n";
 
-&printParameters($fieldNodeSimA,$fieldNodeSimB,$fieldSim,$fieldNodeNetA,$fieldNodeNetB,$fieldWeight,$StopStep,$StopThr,$LinkCode,@Linkage);
+&printParameters($fieldNodeSimA,$fieldNodeSimB,$fieldSim,$fieldNodeNetA,$fieldNodeNetB,$fieldWeight,$StopStep,$StopThr,$LinkCode);
 
 # --- Open input file
 
 print '~~ Opening the first input file: ',"\n";
-&filesInSetUp($ARGV[0]); # It returns the array @INTMP, $fileIn and $labelIn
+&filesInSetUp($fileSim); # It returns the array @INTMP, $fileIn and $labelIn
 @INTMP1=@INTMP;
 $fileIn1=$fileIn;
 $labelIn1=$labelIn;
 
 print '~~ Opening the second input file: ',"\n";
-&filesInSetUp($ARGV[1]); # It returns the array @INTMP
+&filesInSetUp($fileNet); # It returns the array @INTMP
 @INTMP2=@INTMP;
 $fileIn2=$fileIn;
-$labelIn2=$labelIn;
+#$labelIn2=$labelIn;
 
 # --- Open and build headers for the output files
 &filesOutSetUp();
@@ -304,18 +275,18 @@ while($CtrlClust==0){
 	if(($valueA==0)&&($valueB==0)){
 	    next;
 	}
-	if($Linkage[$LinkCode] eq "Single"){ # Update according with the type of clustering
+	if($LinkCode eq "Single"){ # Update according with the type of clustering
 	    $valueTmp=max($valueA,$valueB);
 	    #print join(" ",$valueA,$valueB,$valueTmp),"\n"; # DEBUG
 	    #print join(" ",$nodeA,$nodeB,$ThirdTmpA),"\n"; # DEBUG
-	}elsif($Linkage[$LinkCode] eq "Complete"){
+	}elsif($LinkCode eq "Complete"){
 	    $valueTmp=min($valueA,$valueB);
 	}else{                             # Average linkage, we weight by the size of the cluster
 	    $valueTmp=($NumNodesA*$valueA+$NumNodesB*$valueB)/($NumNodesA+$NumNodesB);
 	}
-	if($valueTmp > 0){ # This should be just needed for Complete Linkage
-	    $thirdListTmp{$ThirdTmp}=1; # We monitor if any third ends with a zero relation
-	}
+	#if($valueTmp > 0){ # This should be needed only for Complete Linkage
+	#    $thirdListTmp{$ThirdTmp}=1; # We monitor if any third ends up with no relation
+	#}
 	$value{$nodeA}{$ThirdTmp}=$valueTmp; # Here is where the update actually takes place
 	$value{$ThirdTmp}{$nodeA}=$valueTmp;
 	$value{$nodeB}{$ThirdTmp}=0; # Fix to zero the relations with B
@@ -329,8 +300,8 @@ while($CtrlClust==0){
 	#.... Not needed if nodeA AND single linkage or nodeB AND complete, 
 	#.... but it is easy to have a mistake so I redo it anyway
 	if(($maxPartner{$ThirdTmp} eq $nodeA)||($maxPartner{$ThirdTmp} eq $nodeB)){ # And check if they were maximum partners	  
-	    $ValueTmp=$maxValue{$ThirdTmp};
-	    $PartTmp=$maxPartner{$ThirdTmp};
+	    #$ValueTmp=$maxValue{$ThirdTmp};
+	    #$PartTmp=$maxPartner{$ThirdTmp};
 	    $maxValue{$ThirdTmp}=0; # look for a new maximum
 	    foreach $NewPartner (@Nodes){
 		if($NewPartner eq $ThirdTmp){
@@ -460,6 +431,114 @@ print '  ',"\n";
 
 
 
+######################
+#      readArguments
+######################
+# Print the different input parameters and choices to the standard outputsub readParameters{
+sub readParameters{
+    $messageOk{"-a"}="~~~ Clustering with = ";
+    $messageOk{"-s"}="~~~ The clustering will run until ";
+    $messageOk{"-v"}="~~~ value as stopping criteria = ";
+    $messageOk{"-c"}="~~~ Reading the similarity from column  = ";    
+    $messageOk{"-fn"}="~~~ The network file is = ";
+    $messageOk{"-fs"}="~~~ The similarity file is = ";
+
+    $messageErr{"-a"}=">>> Error! The clustering methods arguments must be one of  \"Average\", \"Complete\" or \"Single\" and you typed =";
+    $messageErr{"-s"}=">>> Error! The value for stoping criteria must be one of \"none\", \"step\" or \"thres\" and you typed = ";
+    $messageErr{"-v"}=">>> Error! The value for the parameter -v must be a number, and you wrote = ";
+    $messageErr{"-c"}=">>> Error! The column introduced for -c argument must be an integer, and you are giving me this = ";        
+    $messageErr{"-fn"}=">>> Error! This is not a valid name for the network file -fn = ";
+    $messageErr{"-fs"}=">>> Error! This is not a valid name for the similarity file -fs = ";
+
+    $defaultArg{"-a"}="Average"; # Default, average linkage
+    $defaultArg{"-s"}="none"; # Default, until the end of the clustering
+    $defaultArg{"-v"}=0; # The value assign to step or threshold variables if we have no stopping criteria (-s = none)
+    $defaultArg{"-c"}=2; # Default, third column (3-1=2, starts from zero), Tanimoto coefficient in the NodesSimilarity.pl
+    $defaultArg{"-fn"}="string"; 
+    $defaultArg{"-fs"}="string";
+
+    
+    if($ARGV[0] eq "-h"){ # If help is needed exit
+	&helpme();	
+    }
+    $Nargs=$#ARGV;
+    if($Nargs < 3){ # If there are missing arguments exit
+	print " \n";
+	print ">>> Error! Missing input arguments: \n";
+	&abort();
+    }else{ # Otherwise
+	print ">> Reading input arguments: \n";
+	for($i=0; $i<$Nargs; $i=$i+2){ # For each flag 
+	    if(looks_like_number($ARGV[$i+1]) eq looks_like_number($defaultArg{$ARGV[$i]})){ # Check if the value passed for the argument makes sense
+		$loadVar{$ARGV[$i]}=$ARGV[$i+1]; # load the value
+		#print " \n";
+		print $messageOk{$ARGV[$i]},$loadVar{$ARGV[$i]},"\n";
+		#print " \n";
+	    }else{
+		print " \n";
+		print $messageErr{$ARGV[$i]},$ARGV[$i+1],"\n";
+		&abort();
+	    }
+	}
+    }
+    # Check that all the parameters are loaded, otherwise assign a default
+    if((!$loadVar{"-fn"})||(!$loadVar{"-fs"})){
+	print ">>> Error! Missing mandatory input files \n";
+	&abort();
+    }else{
+	$fieldNodeSimA=0; # Indicate the column where the first source node is found minus one
+	$fieldNodeSimB=1; # where the target node is found (minus one)
+	#... Fields to read from the second file (original network)
+	$fieldNodeNetA=0; # Indicate the column where the first source node is found minus one
+	$fieldNodeNetB=1; # where the target node is found (minus one)
+	$fieldWeight=2; # and their similarity (again minus one).
+	$fileNet=$loadVar{"-fn"};
+	$fileSim=$loadVar{"-fs"};
+    }
+    if((!$loadVar{"-s"})||($loadVar{"-s"} eq "none")){
+	$loadVar{"-s"}=$defaultArg{"-s"};
+	$StopStep=$defaultArg{"-v"};
+	$StopThr=$defaultArg{"-v"};
+	print $messageOk{"-s"},"\n";
+	print "~~~~ we get a single cluster \n";
+    }else{
+	if(($loadVar{"-s"} ne "thres")&&($loadVar{"-s"} ne "step")){
+	    print ">>> Error! Unrecognized argument for option -s =",$loadVar{"-s"},"\n";
+	    &abort();
+	}elsif(!$loadVar{"-v"}){
+	    print " >>> Error! a positive value for -v is required argument when -s option ",$loadVar{"-s"}," is used \n";	    
+	    &abort();
+	}elsif($loadVar{"-s"} eq "thres"){
+	    $StopThr=$loadVar{"-v"};
+	    $StopStep=0;
+	    #print $messageOk{"-v"},"threshold =",$loadVar{"-v"},"\n";
+	    
+	}elsif($loadVar{"-s"} eq "step"){
+	    $StopStep=$loadVar{"-v"};
+	    $StopThr=0;
+	    #print $messageOk{"-v"},"step =",$loadVar{"-v"},"\n";
+	}
+    }	
+    if(!$loadVar{"-c"}){
+	$fieldSim=$defaultArg{"-c"};
+	print $messageOk{"-c"},$fieldSim+1,"\n";
+    }else{
+	$fieldSim=$loadVar{"-c"}-1;
+	print $messageOk{"-c"},$fieldSim,"\n";
+    }
+    if(!$loadVar{"-a"}){
+	$LinkCode=$defaultArg{"-a"};
+	print $messageOk{"-a"},$LinkCode,"\n";
+    }elsif(($loadVar{"-a"} eq "Average")||($loadVar{"-a"} eq "Single")||($loadVar{"-a"} eq "Complete")){
+	$LinkCode=$loadVar{"-a"};
+	print "~~~ Clustering with ",$loadVar{"-a"}," method \n";
+    }else{
+	print ">>> Error! Unrecognized argument for option -a = ",$loadVar{"-a"}," method \n";
+	&abort();
+    }
+    return $fileSim,$fieldNodeSimA,$fieldNodeSimB,$fieldSim,$fileNet,$fieldNodeNetA,$fieldNodeNetB,$fieldWeight,$StopStep,$StopThr,$LinkCode;
+
+}
 
 
 ######################
@@ -468,7 +547,7 @@ print '  ',"\n";
 # Print the different input parameters and choices to the standard output
 
 sub printParameters{
-    my ($fieldNodeSimA,$fieldNodeSimB,$fieldSim,$fieldNodeNetA,$fieldNodeNetB,$fieldWeight,$StopStep,$StopThr,$LinkCode,@Linkage)=@_;
+    my ($fieldNodeSimA,$fieldNodeSimB,$fieldSim,$fieldNodeNetA,$fieldNodeNetB,$fieldWeight,$StopStep,$StopThr,$LinkCode)=@_;
 
     print '~~ FIELDS for the FIRST FILE',"\n";
     print '~~~ Reading Node A from column ',$fieldNodeSimA+1,"\n";
@@ -479,7 +558,7 @@ sub printParameters{
     print '~~~ Reading Node B from column ',$fieldNodeNetB+1,"\n";
     print '~~~ Reading Similarities from column ',$fieldWeight+1,"\n";
     print '~~ CLUSTERING parameters: ',"\n";
-    print '~~~ Performing a clustering with ',$Linkage[$LinkCode],' Linkage method',"\n";
+    print '~~~ Performing a clustering with ',$LinkCode,' Linkage method',"\n";
     
     if(($StopStep==0)&&($StopThr==0)){
 	$Stop=0;
@@ -544,15 +623,15 @@ sub filesOutSetUp(){
     $Handle[0]=*HISTcompact; $Handle[1]=*HISTextend; $Handle[2]=*CLU; $Handle[3]=*PAR;
 
     # -- Invoke the time to build headers
-    ($second, $minute, $hour, $dayOfMonth, $month, $yearOffset, $dayOfWeek, $dayOfYear, $daylightSavings) = localtime();
+    ($second, $minute, $hour, $dayOfMonth, $month, $yearOffset ) = localtime();
     $year = 1900 + $yearOffset;
     $theTime = " (mm,dd,yy) $month, $dayOfMonth, $year, and time: $hour:$minute:$second,";
 
     # -- Define here the file names
-    $fileOut[0]='HistCompact-NL_'.$Linkage[$LinkCode].'_'.$StopLabel.$labelIn1;
-    $fileOut[1]='HistExtend-NL_'.$Linkage[$LinkCode].'_'.$StopLabel.$labelIn1;
-    $fileOut[2]='Clusters-NL_'.$Linkage[$LinkCode].'_'.$StopLabel.$labelIn1;
-    $fileOut[3]='Partition-NL_'.$Linkage[$LinkCode].'_'.$StopLabel.$labelIn1;
+    $fileOut[0]='HistCompact-NL_'.$LinkCode.'_'.$StopLabel.$labelIn1;
+    $fileOut[1]='HistExtend-NL_'.$LinkCode.'_'.$StopLabel.$labelIn1;
+    $fileOut[2]='Clusters-NL_'.$LinkCode.'_'.$StopLabel.$labelIn1;
+    $fileOut[3]='Partition-NL_'.$LinkCode.'_'.$StopLabel.$labelIn1;
 
     for($u=0; $u<=3; $u++){
 	if($Stop==0){
@@ -566,7 +645,7 @@ sub filesOutSetUp(){
 	print $ASA '# >> Output from NodeLinkage.pl <<',"\n";
 	print $ASA '# >> Input file 1: "',$fileIn1,"\n";
 	print $ASA '# >> Input file 2: "',$fileIn2,"\n";
-	print $ASA '# >> Clustering of nodes with the ',$Linkage[$LinkCode],' Linkage method',"\n";
+	print $ASA '# >> Clustering of nodes with the ',$LinkCode,' Linkage method',"\n";
 	if($StopStep>0){
 	    print  $ASA '# >> Recovering classification at step: ',$StopStep,"\n";
 	}elsif($StopThr>0){
@@ -576,9 +655,9 @@ sub filesOutSetUp(){
 	print $ASA '# >> Silwood Park, Imperial College London, A.P-G.', "\n";
 	print $ASA '# ', "\n";
 	if($u==0){
-	    print $ASA '#1Step, 2maxGlobalTmp, 3Density, 4DensityInt, 5DensityExt, 6NumNodesA, 7NumEdgesA, 8NumNodesB, 9NumEdgesB, 10NumNodesAB, 11NumEdgesAB, 12NumIntNodesA, 13NumIntNodesB, 14NumExtNodesA, 15NumExtNodesB, 16NumIntNodesAB, 17NumExtNodesAB, 18NumIntEdgesA, 19NumIntEdgesB, 20NumExtEdgesA, 21NumExtEdgesB, 22NumIntEdgesAB, 23NumExtEdgesAB, 20nodeA, 21nodeB, 22NcumInt, 22NcumExt, 23Ncum',"\n";
+	    print $ASA '#1Step, 2Similarity, 3Density, 4DensityInt, 5DensityExt, 6NumNodesA, 7NumEdgesA, 8NumNodesB, 9NumEdgesB, 10NumNodesAB, 11NumEdgesAB, 12NumIntNodesA, 13NumIntNodesB, 14NumExtNodesA, 15NumExtNodesB, 16NumIntNodesAB, 17NumExtNodesAB, 18NumIntEdgesA, 19NumIntEdgesB, 20NumExtEdgesA, 21NumExtEdgesB, 22NumIntEdgesAB, 23NumExtEdgesAB, 20nodeA, 21nodeB, 22NcumInt, 22NcumExt, 23Ncum',"\n";
 	}elsif($u==1){
-	    print $ASA '#CODE4VALUES_1Step, 2maxGlobalTmp, 3nodeA, 4nodeB, 5NumIntNodesA, 6NumIntNodesB, 7NumExtNodesA, 8NumExtNodesB, 9NumIntEdgesA, 10NumIntEdgesB, 11NumExtEdgesA, 12NumExtEdgesB',"\n";
+	    print $ASA '#CODE4VALUES_1Step, 2Similarity, 3nodeA, 4nodeB, 5NumIntNodesA, 6NumIntNodesB, 7NumExtNodesA, 8NumExtNodesB, 9NumIntEdgesA, 10NumIntEdgesB, 11NumExtEdgesA, 12NumExtEdgesB',"\n";
 	}elsif($u==3){
 	    print $ASA '# >>1Node,  2ClusterId',"\n";
 	}
@@ -711,12 +790,83 @@ sub clusterDensity{
      return $D,$D1,$D2;
 }
 
+
+######################
+#     helpme
+######################
+# Return a help message
+
+sub helpme{
+    print "\n";
+    print " >> Help! for NodeLinkage.pl\n";
+    print " >> \n";
+    print " >> INPUT: All the inputs, mandatory and optional, are introduced with a flag: \n";
+    print " >> - Mandatory arguments \n";
+    print " >> \n";
+    print " >>      -fs path_to_file \n";
+    print " >>          A space-separated file with the similarity matrix (all against all) between nodes obtained from  \n";
+    print " >>          the network topology (NodeSimilarity.pl), with the format:     \n";
+    print " >>                 NodeA NodeB   Similarity \n";
+    print " >> \n";
+    print " >>      -fn  path_to_file \n";
+    print " >>         A tab-separated network from which the above matrix was derived, with the format: \n";
+    print " >>                 NodeA NodeB   Weight \n";
+    print " >>         If the name of the file is \"Network\"-label, \"label\" will be used for \n";
+    print " >>         the name of the output, otherwise you will find default names. \n";
+    print " >> \n";
+    print " >>  - Optional arguments: \n";
+    print " >> \n";
+    print " >>     -h \n";
+    print " >>         Prints this help and exits \n";
+    print " >> \n";
+    print " >>     -c integer \n";
+    print " >>         An integer with the column in which the similarity measure between nodes will be found, it \n";
+    print " >>         is given as an option because the ouptut of NodeSimilarity.pl provides Tanimoto and Jaccard \n";
+    print " >>         coefficients in different columns. Defaults to column 3 (Tanimoto), column 4 is Jaccard. \n";
+    print " >> \n";
+    print " >>     -a method \n";
+    print " >>         Where method determines the clustering method. Valid arguments are \"Average\" for Average linkage, \n";
+    print " >>         \"Single\" for single linkage and  \"Complete\" for complete linkage. Default is Average. \n";
+    print " >> \n";
+    print " >>     -s criteria \n";
+    print " >>         Where criteria is a string determining a stopping criteria for the clustering, that may be a threshold in  \n";
+    print " >>         the similarity (argument \"thres\") a stopping point (\"step\") or no stop (it will cluster until \n";
+    print " >>         there is a single cluster, argument \"none\"). Default value is \"none\" \n";
+    print " >> \n";
+    print " >>     -v value \n";
+    print " >>         If a stopping criteria is given, this flag must be used to include either a value that would \n";
+    print " >>         be either a threshold for the similarity criteria or a step for the step criteria. \n";
+    print " >> \n";
+    print " >>  OUTPUT:  \n";    
+    print " >>     A list of files: \n";
+    print " >>     - If there is no stopping criteria given: \n";
+    print " >>          HistExtend.NoStop.InputFile \n";
+    print " >>          HistCompact.NoStop.InputFile \n";
+    print " >>     - With stopping criteria: \n";
+    print " >>          HistExtend.StopCriteria.InputFile \n";
+    print " >>          HistCompact.StopCriteria.InputFile \n";
+    print " >>          Clusters.StopCriteria.InputFile  \n";
+    print " >>          Partition.StopCriteria.InputFile \n";
+    print " >>     -where: \n";
+    print " >>       -- HistExtend file: explicitly describes the clustering process, showing the two clusters \n";
+    print " >>          that are clustered (its nodes, edges, etc.) \n";
+    print " >>       -- HistCompact file:provides the relevant quantities of the two clusters joined (number of edges, \n";
+    print " >>          number of elements contained) and of the clustering, step, partition densities, etc.	\n";
+    print " >>       -- Clusters file: Describes the different clusters at the stopping point \n";
+    print " >>       -- Partition file: A vector assigning to each node the cluster id it belongs to. \n";
+    print " >> EXAMPLE USAGE:  \n";
+    print " >>  ./NodeLinkage -fs path2SimilarityMatrix -fn path2OriginalNetwork -s step -v 145 -a single -c 4 \n";
+    print " >>  \n";
+    exit;
+}
+    
 ######################
 #               abort
 ######################
 # prints a warning message and aborts script execution 
 
 sub abort{
+    print ">>> run  ./NodeSimilarity.pl -h for help \n";
     print '~~~ I abort the execution...',"\n";
     print '~~~ Exit!',"\n";
     print '  ',"\n";

@@ -71,11 +71,9 @@ print "* Building nodes similarities NodeSimilarity.pl  *  \n";
 print "**************************************************  \n";
 print "  \n";
 #
-# ---  parameters here
+# ---  Read parameters
 
-
-&readParameters(@ARGV);
-
+&readParameters(@ARGV); 
 
 # --- Print the information collected
 
@@ -98,6 +96,10 @@ foreach $line(@INTMP){ #  For each line "nodeA nodeB weight type"
     $nodeA=$fields[$fieldNodeA];
     $nodeB=$fields[$fieldNodeB];
     $type=$fields[$fieldType];
+    if(!looks_like_number($type)){
+	print ">> Link types should be integers, I\'ve found this: $type \n";
+	&abort();
+    }
     if($Weighted==0){	
 	$weight=1;	  
     }else{
@@ -408,21 +410,24 @@ sub helpme{
     print "        -d  equal to 0 if the network is undirected, to 1 otherwise\n";
     print "        -f  flag to include the input file\n";
     print "\n";
-    print " INPUT: A TAB-separated file describing an undirected network of the format:\n";
+    print " INPUT: A TAB-separated file describing a network with the format:\n";
+    print "        --- If the network is undirected: \n";
     print "                   NodeA   NodeB    Weight  Type\n";
-    print "     -- \"Weight\" is the strength of the edge (can be positive or negative, if\n";
-    print "        negative the absolute value will be taken in the computation of the Tanimoto coefficients).\n";
-    print "     -- \"Type\" is an integer determining the type of edge (e.g. mutualistic=0, competitive=1).  \n";
-    print "     -- It accepts an indefinite number of header lines starting with # \n";
-    print "     -- Networks with particular formats: \n";
-    print "        --- If the network has no weights, then the file should be formatted simply as:\n";
-    print "                            NodeA   NodeB   Type\n";
     print "        --- If the network is directed, NodeA should be the source node and NodeB the target node.\n";
     print "        --- If the network has both directed and undirected links, then the flag -d 1 should be\n";
     print "            used (i.e. as if it would be directed) and those nodes linked with\n";
     print "            an undirected link should appear twice in both directions and with the same weight:\n";
     print "                            NodeA    NodeB    Weight   Type\n";
     print "                            NodeB    NodeA    Weight   Type\n";
+    print "        --- If the network has no weights, either you use -w = 1 and all your weights are equal to one,\n";
+    print "            or if you use -w = 0 then the file should be formatted simply as:\n";
+    print "                            NodeA   NodeB   Type\n";
+    print "      Where: \n";
+    print "        -- \"Weight\" is the strength of the edge (can be positive or negative, if\n";
+    print "           negative the absolute value will be taken in the computation of the Tanimoto coefficients).\n";
+    print "        -- \"Type\" is an integer determining the type of edge (e.g. mutualistic=0, competitive=1).  \n";
+    print "        -- It accepts an indefinite number of header lines starting with # \n";
+    print "        -- Networks with particular formats: \n";
     print "\n";
     print " OUTPUT: A file describing a similarity matrix of the format:\n";
     print "         NodeA   NodeB   TanimotoCoeff  JaccardCoeff\n";

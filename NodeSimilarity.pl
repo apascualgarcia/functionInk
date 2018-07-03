@@ -22,21 +22,31 @@
 # provide as "Weight" two values (+1 and +1) and tell to the
 # script that the network is weighted.
 #
-# INPUT: A TAB-separated file describing an undirected network of the format:
-#        NodeA   NodeB    Weight  Type
-#        "Weight" is the strength of the edge (can be positive or negative, if
-#        negative the absolute value will be taken in the computation of the Tanimoto coefficients).
-#        "Type" is an integer determining the type of edge (e.g. mutualistic=0, competitive=1).  
-#        It accepts an indefinite number of header lines starting with '#'.
-#        If the network has no weights, then the file should be formatted simply as:
-#        NodeA   NodeB   Type
+# FLAGS: -h  Prints a help message
+#        -w  equal to 0 if the network is not weighted, to 1 otherwise.
+#        -d  equal to 0 if the network is undirected, to 1 otherwise
+#        -f  flag to include the input file
 #
-# OPTIONS: -h  Prints a help message
-#          -W  equal to 0 if the network is not weighted, to 1 otherwise.
+# INPUT: A TAB-separated file describing an undirected network of the format:
+#                   NodeA   NodeB    Weight  Type
+#     -- "Weight" is the strength of the edge (can be positive or negative, if
+#        negative the absolute value will be taken in the computation of the Tanimoto coefficients).
+#     -- "Type" is an integer determining the type of edge (e.g. mutualistic=0, competitive=1).  
+#     --  It accepts an indefinite number of header lines starting with '#'.
+#     -- Networks with particular formats: 
+#        --- If the network has no weights, then the file should be formatted simply as:
+#                            NodeA   NodeB   Type
+#        --- If the network is directed NodeA should be the source node and NodeB the target node.
+#        --- If the network has both directed and undirected links the flag -d 1 should be
+#            included (i.e. as if it would be directed) and those nodes linked with
+#            an undirected link should appear twice in both directions and with the same weight:
+#                            NodeA    NodeB    Weight   Type
+#                            NodeB    NodeA    Weight   Type
+#
 # OUTPUT: A file describing a similarity matrix of the format:
 #         NodeA   NodeB   TanimotoCoeff  JaccardCoeff
 #
-# USAGE: ./NodeSimilarity -W types $path2network
+# USAGE: ./NodeSimilarity -w 1 -d 1 -f $path2network
 #
 #        In addition, if you want to change the order of the input columns you can control it 
 #        in the first section "parameters".
@@ -99,24 +109,32 @@ foreach $line(@INTMP){ #  For each line "nodeA nodeB weight type"
     #}
     $nodes2key{$nodeA}=1; # Store the nodes
     $nodes2key{$nodeB}=1;    
-    $edgeTmp=$nodeA.'KKK'.$nodeB; # Create a single identifier for the edge (not used in this version)
-    push(@{$edge2node{$edgeTmp}},$nodeA); # Relate the edge to their nodes, it may be done simply recovering  (not used in this version)
-    push(@{$edge2node{$edgeTmp}},$nodeB); # them from the new edge identifier, but this will be faster  (not used in this version)
-    $edge2weight{$nodeA}{$nodeB}=$weight; # This structure basically codify every line
-    $edge2type{$nodeA}{$nodeB}=$type; # This structure basically codify every line
-    $edge2weight{$nodeB}{$nodeA}=$weight;
-    $edge2type{$nodeB}{$nodeA}=$type;
-    if($directed == 0){
-	$edge2dir{$nodeA}{$nodeB}=0;
-	$edge2dir{$nodeB}{$nodeA}=0;
-    }else{
-	$edge2dir{$nodeA}{$nodeB}=1;
-	$edge2dir{$nodeB}{$nodeA}=0;
-    }
-    push(@{$neighbour{$nodeA}},$nodeB); # Store for every node its neighbours
-    push(@{$neighbour{$nodeB}},$nodeA);    
-} # End foreach reading file
-
+    #$edgeTmp=$nodeA.'KKK'.$nodeB; # Create a single identifier for the edge (not used in this version)
+    #push(@{$edge2node{$edgeTmp}},$nodeA); # Relate the edge to their nodes, it may be done simply recovering  (not used in this version)
+    #push(@{$edge2node{$edgeTmp}},$nodeB); # them from the new edge identifier, but this will be faster  (not used in this version)
+    if($edge2weight{$nodeA}{$nodeB}){ # If it already exists it means that it is an hybrid link
+	if($directed==0){ # Not allowed for undirected networks
+	    print ">> Repeated edge in input file: $nodeA $nodeB \n";
+	    &abort();
+	}
+	$edge2dir{$nodeA}{$nodeB}=0; # Only fix the directions to be undirected, both the types and neighbours were already stored 
+	$edge2dir{$nodeB}{$nodeA}=0;	
+    }else{ # If it does not exist	
+	$edge2weight{$nodeA}{$nodeB}=$weight; # Store the weight
+	$edge2weight{$nodeB}{$nodeA}=$weight;
+	$edge2type{$nodeA}{$nodeB}=$type; # Store the type
+	$edge2type{$nodeB}{$nodeA}=$type;
+	if($directed == 0){ # If it  is undirected
+	    $edge2dir{$nodeA}{$nodeB}=0; # Both have the same directions
+	    $edge2dir{$nodeB}{$nodeA}=0;
+	}else{ # Otherwise
+	    $edge2dir{$nodeA}{$nodeB}=1; # fix the directions
+	    $edge2dir{$nodeB}{$nodeA}=0;
+	}
+	push(@{$neighbour{$nodeA}},$nodeB); # Store for every node its neighbours, below we will also introduce the node
+	push(@{$neighbour{$nodeB}},$nodeA); # itself as its own neighbour   
+    } # End foreach reading file
+}
 # --- Build lists and control some numbers
 
 @Edges = keys%edge2node;
@@ -202,9 +220,14 @@ for($i=0; $i<$Nnodes; $i++){ # Edge 1
 		if($neighTmpA ne $neighTmpB){ # If they do not share the neighbour skip
 		    next;
 		}else{ # if it is the same, control if it is a link between both nodes (not with a neighbour) and if it is		       
-		    if(($neighTmpA eq $nodeA)||($neighTmpA eq $nodeB)){ # count it just once
+		    if(($neighTmpA eq $nodeB)||($neighTmpB eq $nodeA)){ # count it just once
 			if($selfctrl==0){
 			    $selfctrl=1;
+			    if($neighTmpA eq $nodeB){ # then, neighTmpB=nodeB so we change it
+				$neighTmpB=$nodeA; # to point to nodeA (with selfctrl we will do this just once)
+			    }else{ # the other way around if neighTmpB eq nodeA, neighTmpA is pointing to nodeA
+				$neighTmpA=$nodeB; # so we make it point to nodeB
+			    }
 			}else{
 			    next;
 			}
@@ -213,7 +236,7 @@ for($i=0; $i<$Nnodes; $i++){ # Edge 1
 		# In any other situation it is a neighbour, we just need to control that the type is the same
 		if($edge2weight{$nodeA}{$neighTmpA}){ # This is implicit in the loop above and
 		    if($edge2weight{$nodeB}{$neighTmpB}){ # is not needed. Just to ctrl everything is ok
-			if(($nodeA eq $neighTmpA)||($nodeB eq $neighTmpB)||($edge2type{$nodeA}{$neighTmpA} == $edge2type{$nodeB}{$neighTmpB})){ # if it is a link between them or, being against a third, have the same type 
+			if($edge2type{$nodeA}{$neighTmpA} == $edge2type{$nodeB}{$neighTmpB}){ # if it is a link between them or, being against a third, have the same type 
 			    if($edge2dir{$nodeA}{$neighTmpA} == $edge2dir{$nodeB}{$neighTmpB}){ # and the same direction
 				$Wac=$edge2weight{$nodeA}{$neighTmpA};
 				$Wbc=$edge2weight{$nodeB}{$neighTmpB};
@@ -223,7 +246,7 @@ for($i=0; $i<$Nnodes; $i++){ # Edge 1
 			    }
 			}
 			#if(!$edge2type{$nodeB}{$neighTmpB}){
-			    print join(', ',' *** Control: nodeB',$nodeB,'tmpB',$neighTmpB,'Wbc',$edge2type{$nodeB}{$neighTmpB}),"\n"; # DEBUG
+			#    print join(', ',' *** Control: nodeB',$nodeB,'tmpB',$neighTmpB,'Wbc',$edge2type{$nodeB}{$neighTmpB}),"\n"; # DEBUG
 			#    #exit;
 			#}
 			#print join(', ',' *** Control: i',$i,'j',$j,'Wac',$Wac,'Wbc',$Wbc),"\n"; # DEBUG
@@ -266,7 +289,6 @@ print '  ',"\n";
 # Print the different input parameters and choices to the standard output
 
 sub readParameters{
-
     
     $messageOk{"-w"}="~~~ The network is weighted=1/unweighted=0? Value = ";
     $messageOk{"-d"}="~~~ The network is directed=1/undirected=0? Value = ";;
@@ -375,23 +397,54 @@ sub theTime{
 ######################
 #     helpme
 ######################
-# Return the time where the script is being executed
+# Return a help message
 
 sub helpme{
     print "\n";
-    print " > Help for NodeSimilarity.pl\n";
-    print " > USAGE: ./NodeSimilarity -W weighted path2network \n";
-    print "       - weighted: equal to one if weighted network, zero otherwise \n";
-    print "       - path2network: Path to a tab separated file with the following fields for weighted networks \n";
-    print "          NodeA   NodeB    Weight  Type \n";
-    print "         and, for unweighted networks formatted as: \n";
-    print "           NodeA   NodeB   Type     \n";
-    print "         where: \n";    
-    print "           -- Weight: is the strength of the edge (can be positive or negative, if \n";
-    print "                  negative the absolute value will be taken in the computation of the Tanimoto coefficients).\n";
-    print "           -- Type: is an integer determining the type of edge (e.g. mutualistic=0, competitive=1). \n"; 
-    print "       - It accepts an indefinite number of header lines starting with '#'.\n";
+    print " >> Help for NodeSimilarity.pl\n";
+    print "\n";
+    print " FLAGS: -h  Prints a help message \n";
+    print "        -w  equal to 0 if the network is not weighted, to 1 otherwise.\n";
+    print "        -d  equal to 0 if the network is undirected, to 1 otherwise\n";
+    print "        -f  flag to include the input file\n";
+    print "\n";
+    print " INPUT: A TAB-separated file describing an undirected network of the format:\n";
+    print "                   NodeA   NodeB    Weight  Type\n";
+    print "     -- \"Weight\" is the strength of the edge (can be positive or negative, if\n";
+    print "        negative the absolute value will be taken in the computation of the Tanimoto coefficients).\n";
+    print "     -- \"Type\" is an integer determining the type of edge (e.g. mutualistic=0, competitive=1).  \n";
+    print "     -- It accepts an indefinite number of header lines starting with # \n";
+    print "     -- Networks with particular formats: \n";
+    print "        --- If the network has no weights, then the file should be formatted simply as:\n";
+    print "                            NodeA   NodeB   Type\n";
+    print "        --- If the network is directed, NodeA should be the source node and NodeB the target node.\n";
+    print "        --- If the network has both directed and undirected links, then the flag -d 1 should be\n";
+    print "            used (i.e. as if it would be directed) and those nodes linked with\n";
+    print "            an undirected link should appear twice in both directions and with the same weight:\n";
+    print "                            NodeA    NodeB    Weight   Type\n";
+    print "                            NodeB    NodeA    Weight   Type\n";
+    print "\n";
+    print " OUTPUT: A file describing a similarity matrix of the format:\n";
+    print "         NodeA   NodeB   TanimotoCoeff  JaccardCoeff\n";
+    print "\n";
+    print " USAGE: ./NodeSimilarity -w 1 -d 1 -f path2network\n";
+    print "\n";
+    print " COMMENTS: In addition, if you want to change the order of the input columns you can code it \n";
+    print "        in the function \"readParameters\".\n";
     print "\n";
     print "\n";
     exit;
+}
+
+
+######################
+#    Abort
+######################
+# Abort execution
+
+sub abort{
+    print '~~~ I abort the execution...',"\n";
+    print '~~~ Exit!',"\n";
+    print '  ',"\n";
+    exit
 }

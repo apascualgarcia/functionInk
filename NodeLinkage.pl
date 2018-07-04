@@ -213,11 +213,11 @@ while($CtrlClust==0){
     print join(" ",' ::: Number of External Edges A/B:',$NumExtEdgesA,'/',$NumExtEdgesB),"\n";
 
     #... Print information of A and B  in the extended history file before joining them
-    print HISTextend join(" ",'VALUES',$Step,$maxGlobalTmp,$nodeA,$nodeB,$NumIntNodesA,$NumIntNodesB,$NumExtNodesA,$NumExtNodesB,$NumIntEdgesA,$NumIntEdgesB,$NumExtEdgesA,$NumExtEdgesB),"\n";
-    print HISTextend join(" ",'NODES_A',@{$cluster2nodes{$nodeA}}),"\n";
-    print HISTextend join(" ",'NODES_B',@{$cluster2nodes{$nodeB}}),"\n";
-    print HISTextend join(" ",'EDGES_A',@{$cluster2edges{$nodeA}}),"\n";
-    print HISTextend join(" ",'EDGES_B',@{$cluster2edges{$nodeB}}),"\n";
+    print HISTextend join("\t",'VALUES',$Step,$maxGlobalTmp,$nodeA,$nodeB,$NumIntNodesA,$NumIntNodesB,$NumExtNodesA,$NumExtNodesB,$NumIntEdgesA,$NumIntEdgesB,$NumExtEdgesA,$NumExtEdgesB),"\n";
+    print HISTextend join("\t",'NODES_A',@{$cluster2nodes{$nodeA}}),"\n";
+    print HISTextend join("\t",'NODES_B',@{$cluster2nodes{$nodeB}}),"\n";
+    print HISTextend join("\t",'EDGES_A',@{$cluster2edges{$nodeA}}),"\n";
+    print HISTextend join("\t",'EDGES_B',@{$cluster2edges{$nodeB}}),"\n";
 
     #... Start Joining the clusters. First, send the nodes from B to A
     push(@{$cluster2nodes{$nodeA}},@{$cluster2nodes{$nodeB}});
@@ -254,8 +254,8 @@ while($CtrlClust==0){
     print join(" ",' ::: Number of external Edges A+B:',$NumExtEdgesAB),"\n";
 
     #... extended file as well
-    print HISTextend join(" ",'NODES_AB',@{$cluster2nodes{$nodeA}}),"\n";
-    print HISTextend join(" ",'EDGES_AB',@{$cluster2edges{$nodeA}}),"\n";
+    print HISTextend join("\t",'NODES_AB',@{$cluster2nodes{$nodeA}}),"\n";
+    print HISTextend join("\t",'EDGES_AB',@{$cluster2edges{$nodeA}}),"\n";
 
     #... Update the relation values 
 
@@ -387,7 +387,7 @@ while($CtrlClust==0){
   
 
     #... Print the compact history file, which includes the density
-    print HISTcompact join(" ",$Step,$maxGlobalTmp,$Density,$DensityInt,$DensityExt,$NumNodesA,$NumEdgesA,$NumNodesB,$NumEdgesB,$NumNodesAB,$NumEdgesAB,$NumIntNodesA,$NumIntNodesB,$NumExtNodesA,$NumExtNodesB,$NumIntNodesAB,$NumExtNodesAB,$NumIntEdgesA,$NumIntEdgesB,$NumExtEdgesA,$NumExtEdgesB,$NumIntEdgesAB,$NumExtEdgesAB,$nodeA,$nodeB,$NcumInt,$NcumExt,$Ncum),"\n";
+    print HISTcompact join("\t",$Step,$maxGlobalTmp,$Density,$DensityInt,$DensityExt,$NumNodesA,$NumEdgesA,$NumNodesB,$NumEdgesB,$NumNodesAB,$NumEdgesAB,$NumIntNodesA,$NumIntNodesB,$NumExtNodesA,$NumExtNodesB,$NumIntNodesAB,$NumExtNodesAB,$NumIntEdgesA,$NumIntEdgesB,$NumExtEdgesA,$NumExtEdgesB,$NumIntEdgesAB,$NumExtEdgesAB,$nodeA,$nodeB,$NcumInt,$NcumExt,$Ncum),"\n";
     print '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~',"\n";
     print "  \n";
 } #endwhile clustering
@@ -400,9 +400,9 @@ if($Stop==1){ # If there is a classification and partition to print
 	$Nclust+=1;
 	$NumNodes=$#{$cluster2nodes{$NodeTmp}}+1;
 	$NumEdges=$#{$cluster2edges{$NodeTmp}}+1;
-	print CLU 'CLUS_',$Nclust,'_INFO ',join(" ",'NumberNodes=',$NumNodes,'NumberEdges=',$NumEdges),"\n";
-	print CLU 'CLUS_',$Nclust,'_NODES ',join(" ",@{$cluster2nodes{$NodeTmp}}),"\n";	
-	print CLU 'CLUS_',$Nclust,'_EDGES ',join(" ",@{$cluster2edges{$NodeTmp}}),"\n";
+	print CLU 'CLUS_',$Nclust,'_INFO ',join("\t",'NumberNodes=',$NumNodes,'NumberEdges=',$NumEdges),"\n";
+	print CLU 'CLUS_',$Nclust,'_NODES ',join("\t",@{$cluster2nodes{$NodeTmp}}),"\n";	
+	print CLU 'CLUS_',$Nclust,'_EDGES ',join("\t",@{$cluster2edges{$NodeTmp}}),"\n";
 	@NodesInClus=@{$cluster2nodes{$NodeTmp}};
 	foreach $NodeInClusTmp(@NodesInClus){
 	    print PAR join("\t",$NodeInClusTmp,$Nclust),"\n";
@@ -677,7 +677,7 @@ sub splitIntExtEdges{
     my ($arrayRef1 , $arrayRef2) = @_; 
     my @subEdges = @{$arrayRef1};  
     my @subNodes = @{$arrayRef2};
-    print join(" ",'>>INTO> **EDGES',@subEdges,'**NODES:', @subNodes),"\n"; # DEBUG
+    #print join(" ",'>>INTO> **EDGES',@subEdges,'**NODES:', @subNodes),"\n"; # DEBUG
     foreach $EdgeTmp(@subEdges){
 	@fields=split("XXXX",$EdgeTmp);
 	$NodeA=$fields[0];

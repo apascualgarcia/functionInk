@@ -655,7 +655,7 @@ sub filesOutSetUp(){
 	print $ASA '# >> Silwood Park, Imperial College London, A.P-G.', "\n";
 	print $ASA '# ', "\n";
 	if($u==0){
-	    print $ASA '#1Step, 2Similarity, 3Density, 4DensityInt, 5DensityExt, 6NumNodesA, 7NumEdgesA, 8NumNodesB, 9NumEdgesB, 10NumNodesAB, 11NumEdgesAB, 12NumIntNodesA, 13NumIntNodesB, 14NumExtNodesA, 15NumExtNodesB, 16NumIntNodesAB, 17NumExtNodesAB, 18NumIntEdgesA, 19NumIntEdgesB, 20NumExtEdgesA, 21NumExtEdgesB, 22NumIntEdgesAB, 23NumExtEdgesAB, 20nodeA, 21nodeB, 22NcumInt, 22NcumExt, 23Ncum',"\n";
+	    print $ASA join("\t",'Step','Similarity','Density','DensityInt','DensityExt','NumNodesA','NumEdgesA','NumNodesB','NumEdgesB','NumNodesAB','NumEdgesAB','NumIntNodesA','NumIntNodesB','NumExtNodesA','NumExtNodesB','NumIntNodesAB','NumExtNodesAB','NumIntEdgesA','NumIntEdgesB','NumExtEdgesA','NumExtEdgesB','NumIntEdgesAB','NumExtEdgesAB','nodeA','nodeB','NcumInt','NcumExt','Ncum'),"\n";
 	}elsif($u==1){
 	    print $ASA '#CODE4VALUES_1Step, 2Similarity, 3nodeA, 4nodeB, 5NumIntNodesA, 6NumIntNodesB, 7NumExtNodesA, 8NumExtNodesB, 9NumIntEdgesA, 10NumIntEdgesB, 11NumExtEdgesA, 12NumExtEdgesB',"\n";
 	}elsif($u==3){

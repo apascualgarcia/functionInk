@@ -128,7 +128,7 @@ foreach $line(@INTMP1){ #  For each line "nodeA nodeB networkSimilarity"
 	next;
     }
     chomp($line);
-    @fields=split(/\s+/,$line);
+    @fields=split(/\t/,$line);
     $nodeA=$fields[$fieldNodeSimA];
     $nodeB=$fields[$fieldNodeSimB];
     $sim=$fields[$fieldSim];
@@ -804,9 +804,9 @@ sub helpme{
     print " >> - Mandatory arguments \n";
     print " >> \n";
     print " >>      -fs path_to_file \n";
-    print " >>          A space-separated file with the similarity matrix (all against all) between nodes obtained from  \n";
-    print " >>          the network topology (NodeSimilarity.pl), with the format:     \n";
-    print " >>                 NodeA NodeB   Similarity \n";
+    print " >>          A tab-separated long-formatted-matrix  with the topological similarity between nodes as computed by  \n";
+    print " >>          NodeSimilarity.pl, with the format:     \n";
+    print " >>                 NodeA NodeB  Similarity1 Similarity2, .... \n";
     print " >> \n";
     print " >>      -fn  path_to_file \n";
     print " >>         A tab-separated network from which the above matrix was derived, with the format: \n";

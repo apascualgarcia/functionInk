@@ -111,9 +111,9 @@ foreach $line(@INTMP){ #  For each line "nodeA nodeB weight type"
     #}
     $nodes2key{$nodeA}=1; # Store the nodes
     $nodes2key{$nodeB}=1;    
-    #$edgeTmp=$nodeA.'KKK'.$nodeB; # Create a single identifier for the edge (not used in this version)
-    #push(@{$edge2node{$edgeTmp}},$nodeA); # Relate the edge to their nodes, it may be done simply recovering  (not used in this version)
-    #push(@{$edge2node{$edgeTmp}},$nodeB); # them from the new edge identifier, but this will be faster  (not used in this version)
+    $edgeTmp=$nodeA.'KKK'.$nodeB; # Create a single identifier for the edge (not used in this version)
+    push(@{$edge2node{$edgeTmp}},$nodeA); # Relate the edge to their nodes, it may be done simply recovering  (not used in this version)
+    push(@{$edge2node{$edgeTmp}},$nodeB); # them from the new edge identifier, but this will be faster  (not used in this version)
     if($edge2weight{$nodeA}{$nodeB}){ # If it already exists it means that it is an hybrid link
 	if($directed==0){ # Not allowed for undirected networks
 	    print ">> Repeated edge in input file: $nodeA $nodeB \n";
@@ -266,7 +266,7 @@ for($i=0; $i<$Nnodes; $i++){ # Edge 1
 	#     exit;
 	# }
 	#print join(' ',' *** Control: $NneighsA,$NneighsB,$node2aa{$nodeA}, $Wab,$Nab',$NneighsA,$NneighsB,$node2aa{$nodeA}, $Wab,$Nab),"\n"; # DEBUG
-	print OUT0 join(" ",$nodeA,$nodeB,$Tanimoto,$Jaccard,$Nab,$NneighsA,$NneighsB),"\n";
+	print OUT0 join("\t",$nodeA,$nodeB,$Tanimoto,$Jaccard,$Nab,$NneighsA,$NneighsB),"\n";
     } # End for - similarity computation $j
 } # End for - similarity computation $i
 

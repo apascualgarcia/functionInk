@@ -26,15 +26,15 @@ to see the valid formats and options please use the flag ```-h```.
 * With the similarity matrix obtained and the original network you will cluster
 the nodes with the algorithm ```NodeLinkage.pl```. Again use the flag ```-h``` to see
 the format an options. This method should be typically run twice:
-  * In the first run, you will cluster the nodes until no significant relations are found. This
+ * In the first run, you will cluster the nodes until no significant relations are found. This
 should be done to obtain the different measures of the _partition density_ which will be used
 to determine the optimal stopping point of the clustering.
-  * The analysis of the partition density can be done with the script ```node_linkage_analysis.R```, from
+ * The analysis of the partition density can be done with the script ```node_linkage_analysis.R```, from
 which you will obtain the step at which the total, external and internal partition densities have a maxima. In our
 experience the maxima of the internal partition density brings a partition more similar to the one that would be
 found with traditional methods maximizing the modularity, while the external partition density would bring you
 communities that we interpreted in _paper_ as _functional groups_.
-  * After identifying the desired stopping point, you can run again ```NodeLinkage.pl``` with a flag
+ * After identifying the desired stopping point, you can run again ```NodeLinkage.pl``` with a flag
 that indicates the step or similarity threshold were you want it to stop, and you will obtain at that point
 the partition of the network and the description of the communities.
 

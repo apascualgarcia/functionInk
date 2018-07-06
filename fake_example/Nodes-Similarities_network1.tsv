@@ -1,0 +1,21 @@
+# >> Output from NodeSimilarity.pl <<
+# >> Input file: "network1.tsv
+# >> Jaccard and Tanimoto similarity between nodes in the network 
+# >> Running at date:  (mm,dd,yy) 5, 30, 2018, and time: 23:59:39,
+# >> Silwood Park, Imperial College London, A.P-G.
+# >>1NodeA, 2NodeB, 3TanimotoCoeff, 4JaccardCoeff, 5SharedNeighs, 6NeighsA, 7NeighsB
+NodeF NodeG 0.0406091370558376 0.25 1 2 2
+NodeF NodeB 0 0 0 2 4
+NodeF NodeE 0.0280701754385965 0.25 1 2 2
+NodeF NodeC 0 0 0 2 2
+NodeF NodeA 0 0 0 2 4
+NodeG NodeB 0 0 0 2 4
+NodeG NodeE 0.43652561247216 0.25 1 2 2
+NodeG NodeC 0 0 0 2 2
+NodeG NodeA 0 0 0 2 4
+NodeB NodeE 0 0 0 4 2
+NodeB NodeC 0 0 0 4 2
+NodeB NodeA 0.300751879699248 0.125 1 4 4
+NodeE NodeC 0 0 0 2 2
+NodeE NodeA 0 0 0 2 4
+NodeC NodeA 0 0 0 2 4

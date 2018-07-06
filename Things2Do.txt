@@ -8,6 +8,12 @@ Created martes 05 julio 2016
 [*] Revisar output del programa
 [*] Hay un problema con el nombre del fichero de salida, no coge la etiqueta del de entrada: la etiqueta de salida depende fuertemente del nombre del fichero de partida
 [*] Revisar y testar todo el programa OJO CON LOS GLOBAL vs LOCAL
-[ ] NodeSimilarity.pl Ejemplo de posible error (mX7): "massilia.timonae" "achromobacter.xylosoxidans" 3 1.5 3 1 
+[*] NodeSimilarity.pl Ejemplo de posible error (mX7): "massilia.timonae" "achromobacter.xylosoxidans" 3 1.5 3 1 
 [*] Salen densidades negativas para D2. Posible fallo en la función splitIntExtEdges porque no actualiza bien el número de taxones internos al juntar dos. SOLVED: En realidad se estaba usando la variable errónea, en vez de calcularla con el número de nodos dentro del cluster se calculaba con el número de nodos dentro del cluster con al menos un link con otro nodo en el cluster.
-[ ] Generalizar el script para considerar distintas "clases" a la hora de hacer la similaridad en NodeSimilarity.pl. Habría que añadir un campo de lectura (una columna más) que se utilice si quiere el usuario y, si no quiere, que use los signos de la interacción en el clustering.
+[*] Generalizar el script para considerar distintas "clases" a la hora de hacer la similaridad en NodeSimilarity.pl. Habría que añadir un campo de lectura (una columna más) que se utilice si quiere el usuario y, si no quiere, que use los signos de la interacción en el clustering. Renombro la versión con dos links como "_2types" y en adelante el nombre original es el generalizado.
+[*] La nueva versión no reproduce la antigua para el mismo network (Time0 de functional groups) para el que he creado un nuevo archivo (types). Hay una discrepancia de un link, uno de los dos cuenta mal. Parece que es el antiguo, pero hay dos problemas nuevos:
+	[*] Qué hacer con los las redes dirigidas? Hay que meter un if en la lectura, y en la evaluación hay que repensar la variable $selfCtrl
+	[*] Se puede hacer fácilmente también
+un control de que no haya links dobles. 
+	[*] No veo por ningún lado que un nodo sea vecino de sí mismo, comprobar esto. Parece que el fallo actual va sobre esto, estoy printando la línea 226, dice que hay un valor iniciado en la comparación numérica (==) del if de la línea 216
+	[*] Los nodos E y G en network1 que son los únicos no dirigidos, tienen un vecino más de lo que deberían, y no devuelve que tengan ningún nodo en común

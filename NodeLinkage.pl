@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+!/usr/bin/perl -w
 # ******************************
 # * NodeLinkage.pl             *
 # ******************************
@@ -828,7 +828,7 @@ sub helpme{
     print " >>         Where method determines the clustering method. Valid arguments are \"Average\" for Average linkage, \n";
     print " >>         \"Single\" for single linkage and  \"Complete\" for complete linkage. Default is Average. \n";
     print " >> \n";
-    print " >>     -s criteria \n";
+    print " >>     -s stop criteria \n";
     print " >>         Where criteria is a string determining a stopping criteria for the clustering, that may be a threshold in  \n";
     print " >>         the similarity (argument \"thres\") a stopping point (\"step\") or no stop (it will cluster until \n";
     print " >>         there is a single cluster, argument \"none\"). Default value is \"none\" \n";

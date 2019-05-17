@@ -1,0 +1,11 @@
+# >> Output from NodeLinkage.pl <<
+# >> Input file 1: "Nodes-Similarities_network1.tsv
+# >> Input file 2: "network1.tsv
+# >> Clustering of nodes with the Single Linkage method
+# >> Running at date:  (mm,dd,yy) 6, 2, 2018, and time: 3:6:37,
+# >> Silwood Park, Imperial College London, A.P-G.
+# 
+#1Step, 2Similarity, 3Density, 4DensityInt, 5DensityExt, 6NumNodesA, 7NumEdgesA, 8NumNodesB, 9NumEdgesB, 10NumNodesAB, 11NumEdgesAB, 12NumIntNodesA, 13NumIntNodesB, 14NumExtNodesA, 15NumExtNodesB, 16NumIntNodesAB, 17NumExtNodesAB, 18NumIntEdgesA, 19NumIntEdgesB, 20NumExtEdgesA, 21NumExtEdgesB, 22NumIntEdgesAB, 23NumExtEdgesAB, 20nodeA, 21nodeB, 22NcumInt, 22NcumExt, 23Ncum
+1 0.43652561247216 0.125 0.125 0 1 2 1 2 2 3 0 0 2 2 2 2 0 0 2 2 1 2 NodeG NodeE 1 7 8
+2 0.300751879699248 0.4375 0.25 0.1875 1 4 1 4 2 7 0 0 4 4 2 4 0 0 4 4 1 6 NodeB NodeA 2 6 8
+3 0.0406091370558376 0.479166666666667 0.166666666666667 0.3125 2 3 1 2 3 5 2 0 2 2 2 2 1 0 2 2 1 4 NodeG NodeF 2 6 8

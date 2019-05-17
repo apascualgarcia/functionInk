@@ -1,0 +1,29 @@
+# >> Output from NodeLinkage.pl <<
+# >> Input file 1: "Nodes-Similarities_network1.tsv
+# >> Input file 2: "network1.tsv
+# >> Clustering of nodes with the Average Linkage method
+# >> Running at date:  (mm,dd,yy) 6, 2, 2018, and time: 3:11:24,
+# >> Silwood Park, Imperial College London, A.P-G.
+# 
+#CODE4VALUES_1Step, 2Similarity, 3nodeA, 4nodeB, 5NumIntNodesA, 6NumIntNodesB, 7NumExtNodesA, 8NumExtNodesB, 9NumIntEdgesA, 10NumIntEdgesB, 11NumExtEdgesA, 12NumExtEdgesB
+VALUES 1 0.25 NodeF NodeG 0 0 2 2 0 0 2 2
+NODES_A NodeF
+NODES_B NodeG
+EDGES_A NodeAXXXXNodeF NodeBXXXXNodeF
+EDGES_B NodeBXXXXNodeG NodeEXXXXNodeG
+NODES_AB NodeF NodeG
+EDGES_AB NodeAXXXXNodeF NodeBXXXXNodeG NodeEXXXXNodeG NodeBXXXXNodeF
+VALUES 2 0.25 NodeF NodeE 0 0 3 2 0 0 4 2
+NODES_A NodeF NodeG
+NODES_B NodeE
+EDGES_A NodeAXXXXNodeF NodeBXXXXNodeG NodeEXXXXNodeG NodeBXXXXNodeF
+EDGES_B NodeAXXXXNodeE NodeEXXXXNodeG
+NODES_AB NodeF NodeG NodeE
+EDGES_AB NodeBXXXXNodeF NodeBXXXXNodeG NodeAXXXXNodeF NodeAXXXXNodeE NodeEXXXXNodeG
+VALUES 3 0.125 NodeA NodeB 0 0 4 4 0 0 4 4
+NODES_A NodeA
+NODES_B NodeB
+EDGES_A NodeCXXXXNodeA NodeAXXXXNodeB NodeAXXXXNodeE NodeAXXXXNodeF
+EDGES_B NodeCXXXXNodeB NodeAXXXXNodeB NodeBXXXXNodeF NodeBXXXXNodeG
+NODES_AB NodeA NodeB
+EDGES_AB NodeCXXXXNodeA NodeAXXXXNodeB NodeAXXXXNodeE NodeAXXXXNodeF NodeBXXXXNodeG NodeBXXXXNodeF NodeCXXXXNodeB

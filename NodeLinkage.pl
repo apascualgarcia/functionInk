@@ -809,10 +809,12 @@ sub helpme{
     print " >>                 NodeA NodeB  Similarity1 Similarity2, .... \n";
     print " >> \n";
     print " >>      -fn  path_to_file \n";
-    print " >>         A tab-separated network from which the above matrix was derived, with the format: \n";
+    print " >>         A tab-separated network from which the above similarity matrix was derived, i.e. the input of NodeSimilarity.pl, with the format: \n";
     print " >>                 NodeA NodeB   Weight \n";
     print " >>         If the name of the file is \"Network\"-label, \"label\" will be used for \n";
     print " >>         the name of the output, otherwise you will find default names. \n";
+    print " >> \n";
+    print " >>       Note: Both input files accept a header starting with the character # \n";    
     print " >> \n";
     print " >>  - Optional arguments: \n";
     print " >> \n";

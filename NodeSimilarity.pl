@@ -56,7 +56,7 @@
 # Silwood Park (Imperial College London)
 # July 4th, 2016. Alberto Pascual-García 
 # alberto.pascual.garcia@gmail.com
-#
+# apascualgarcia.github.io
 # Updated in June, 2018.
 # Zürich, Theoretical Biology (ETH)
 #########################################
@@ -83,6 +83,7 @@ print "  \n";
 # --- Read the network and build hashes
 print " \n";
 print ">> Reading the network: \n";
+print "~~~ The first lines for the fields read from file and after conversions are: \n";
 $ctrl=-1;
 foreach $line(@INTMP){ #  For each line "nodeA nodeB weight type"
     #print join(' ',' ... Reading: ',$line),"\n";  # DEBUG
@@ -95,17 +96,28 @@ foreach $line(@INTMP){ #  For each line "nodeA nodeB weight type"
     @fields=split("\t",$line);
     $nodeA=$fields[$fieldNodeA];
     $nodeB=$fields[$fieldNodeB];
-    $type=$fields[$fieldType];
-    if(!looks_like_number($type)){
-	print ">> Link types should be integers, I\'ve found this: $type \n";
-	&abort();
-    }
+    #if(!looks_like_number($type)){ # Updated to consider them character
+    #    print ">> Link types should be integers, I\'ve found this: $type \n";
+    #    &abort();
+    #}
     if($Weighted==0){	
-	$weight=1;	  
-    }else{
+	$weight=1;
+	if($typed == 0){
+	    $type = "1";
+	}else{
+	    $type=$fields[$fieldType];
+	}
+    }elsif($typed == 0){
+	$type = "1";
 	$weight=$fields[$fieldWeight];	    
+    }else{
+	$weight=$fields[$fieldWeight];
+	$type=$fields[$fieldType];
     }
-    print join(" ",'~~~ Reading fields ',$nodeA,$nodeB,$type,$weight),"\n";
+    if($ctrl < 10){
+	print "~~~ Reading fields: nodeA = $nodeA,nodeB= $nodeB, type= $type, weight = $weight, \n";
+	
+    }
     #if($ctrl==0){
 	#if(!$type || !$weight){print "~ Problems with file format, check type and weight fields. Exit...\n";exit;}		     
     #}
@@ -235,10 +247,10 @@ for($i=0; $i<$Nnodes; $i++){ # Edge 1
 			}
 		    }
 		}
-		# In any other situation it is a neighbour, we just need to control that the type is the same
+		# In any other situation, we just need to control that the type is the same
 		if($edge2weight{$nodeA}{$neighTmpA}){ # This is implicit in the loop above and
 		    if($edge2weight{$nodeB}{$neighTmpB}){ # is not needed. Just to ctrl everything is ok
-			if($edge2type{$nodeA}{$neighTmpA} == $edge2type{$nodeB}{$neighTmpB}){ # if it is a link between them or, being against a third, have the same type 
+			if($edge2type{$nodeA}{$neighTmpA} eq $edge2type{$nodeB}{$neighTmpB}){ # if it is a link between them or, being against a third, have the same type 
 			    if($edge2dir{$nodeA}{$neighTmpA} == $edge2dir{$nodeB}{$neighTmpB}){ # and the same direction
 				$Wac=$edge2weight{$nodeA}{$neighTmpA};
 				$Wbc=$edge2weight{$nodeB}{$neighTmpB};
@@ -293,13 +305,16 @@ print '  ',"\n";
 sub readParameters{
     
     $messageOk{"-w"}="~~~ The network is weighted=1/unweighted=0? Value = ";
-    $messageOk{"-d"}="~~~ The network is directed=1/undirected=0? Value = ";;
+    $messageOk{"-d"}="~~~ The network is directed=1/undirected=0? Value = ";
+    $messageOk{"-t"}="~~~ The network has different types=1/or a single type=0? Value = ";
     $messageOk{"-f"}="~~~ The network file is = ";
-    $messageErr{"-w"}="~~~ The value for network weight argument is not numeric = ";
-    $messageErr{"-d"}="~~~ The value for network weight argument is not numeric = ";;
+    $messageErr{"-w"}="~~~ The value for network weight argument (-w) is not numeric = ";
+    $messageErr{"-d"}="~~~ The value for network directionality argument (-d) is not numeric = ";
+    $messageErr{"-t"}="~~~ The value for the link types argument (-t) is not numeric = ";;
     $messageErr{"-f"}="~~~ This is not a valid name for a file = ";  
     $typeArg{"-d"}=1;
     $typeArg{"-w"}=1;
+    $typeArg{"-t"}=1;
     $typeArg{"-f"}="string";
 
     
@@ -307,7 +322,7 @@ sub readParameters{
 	&helpme();	
     }
     $Nargs=$#ARGV;
-    if($Nargs != 5){ # If there are missing arguments exit
+    if($Nargs != 7){ # If there are missing arguments exit
 	print " \n";
 	print ">> Missing input arguments: \n";
 	print ">> run  ./NodeSimilarity.pl -h for help \n";
@@ -333,22 +348,27 @@ sub readParameters{
     }
     $Weighted=$loadVar{"-w"};
     $directed=$loadVar{"-d"};
+    $typed=$loadVar{"-t"};
     $fileIn=$loadVar{"-f"};
+    # --- Assign columns to different file types depending on the input file, and return values
+    # ..... Independently of the options the first two columns are always the same
+    $fieldNodeA=0; # Indicate the column where the first source node is found (minus one)
+    $fieldNodeB=1; # where the target node is found (minus one)
     if($Weighted == 0){
-	$fieldNodeA=0; # Indicate the column where the first source node is found (minus one)
-	$fieldNodeB=1; # where the target node is found (minus one)
-	$fieldType=2;
+	if($typed == 0){ # No weight no type
+	    return $fileIn, $Weighted,$typed, $fieldNodeA, $fieldNodeB;
+	}else{ # No weight only, but there is type
+	    $fieldType=2; # where the type is found
+	    return $fileIn, $Weighted, $typed, $fieldNodeA, $fieldNodeB,$fieldType;  
+	}
+    }elsif($typed == 0){ # No weight only
+	$fieldWeight=2; # field for the interaction value (again minus one).
+	return $fileIn, $Weighted, $typed, $fieldNodeA, $fieldNodeB,$fieldWeight;  
     }else{
-	$fieldNodeA=0; # Indicate the column where the first source node is found (minus one)
-	$fieldNodeB=1; # where the target node is found (minus one)
 	$fieldWeight=2; # and their interaction value (again minus one). 
-	$fieldType=3;
-    }    
-    if($Weighted==1){
+	$fieldType=3; # where the type is found
 	return $fileIn, $Weighted, $fieldNodeA, $fieldNodeB,$fieldWeight,$fieldType;
-    }else{
-	return $fileIn, $Weighted, $fieldNodeA, $fieldNodeB,$fieldType;  
-    }
+    }    
 }
 
 ######################
@@ -364,8 +384,19 @@ sub printParameters{
     print '~~~ Reading Node B from column ',$fieldNodeB+1,"\n";
     if($Weighted==0){
 	print '~~~ Working with an unweighted network -- Jaccard Similarity',"\n";
+	if($typed==0){
+	    print '~~~ Working with a network with a single type of link',"\n"; 
+	}else{
+	    print '~~~ Working with a network with different types of links',"\n"; 
+	    print '~~~ Reading types from column ',$fieldType+1,"\n";
+	}
+    }elsif($typed == 0){
+	print '~~~ Working with a weighted network -- Tanimoto coefficient',"\n";
+	print '~~~ Reading weights from column ',$fieldWeight+1,"\n";
+	print '~~~ Working with a network with a single type of link',"\n"; 
     }else{
 	print '~~~ Working with a weighted network -- Tanimoto coefficient',"\n";
+	print '~~~ Working with a network with different types of links',"\n"; 
 	print '~~~ Reading weights from column ',$fieldWeight+1,"\n";
 	print '~~~ Reading types from column ',$fieldType+1,"\n";
     }
@@ -406,33 +437,42 @@ sub helpme{
     print " >> Help for NodeSimilarity.pl\n";
     print "\n";
     print " FLAGS: -h  Prints a help message \n";
-    print "        -w  equal to 0 if the network is not weighted, to 1 otherwise.\n";
-    print "        -d  equal to 0 if the network is undirected, to 1 otherwise\n";
-    print "        -f  flag to include the input file\n";
+    print "        -w  equal to 0 if the network is not weighted, to 1 otherwise (mandatory).\n";
+    print "        -d  equal to 0 if the network is undirected, to 1 otherwise (mandatory).\n";
+    print "        -t  equal to 0 if the links are of the same type, to 1 if there are different types (mandatory). \n";
+    print "        -f  flag to include the input file (mandatory).\n";
     print "\n";
     print " INPUT: A TAB-separated file describing a network with the format:\n";
-    print "        --- If the network is undirected: \n";
+    print "        --- If the network is undirected the general format is: \n";
     print "                   NodeA   NodeB    Weight  Type\n";
-    print "        --- If the network is directed, NodeA should be the source node and NodeB the target node.\n";
+    print "            where: \n";               
+    print "            ... \"NodeA\" is the source node and \"NodeB\" the target node.\n";
+    print "            ... \"Weight\" is a real value indicating the strength of the link  (can be positive or negative, if\n";
+    print "                negative the absolute value will be taken in the computation of the Tanimoto coefficients).\n";
+    print "            ... \"Type\" is a factor indicating the type of the link (e.g. mutualistic=0, competitive=1).\n";
+    print "            ... The script accepts an indefinite number of header lines starting with # \n";
+    print "\n";
     print "        --- If the network has both directed and undirected links, then the flag -d 1 should be\n";
     print "            used (i.e. as if it would be directed) and those nodes linked with\n";
     print "            an undirected link should appear twice in both directions and with the same weight:\n";
     print "                            NodeA    NodeB    Weight   Type\n";
     print "                            NodeB    NodeA    Weight   Type\n";
-    print "        --- If the network has no weights, either you use -w = 1 and all your weights are equal to one,\n";
-    print "            or if you use -w = 0 then the file should be formatted simply as:\n";
+    print "\n";
+    print "        --- If the network has no weights, either you use the general format (with -w 1) and all the weights are equal to one,\n";
+    print "            or you use -w 0, and then the file can be simply formatted as:\n";
     print "                            NodeA   NodeB   Type\n";
-    print "      Where: \n";
-    print "        -- \"Weight\" is the strength of the edge (can be positive or negative, if\n";
-    print "           negative the absolute value will be taken in the computation of the Tanimoto coefficients).\n";
-    print "        -- \"Type\" is an integer determining the type of edge (e.g. mutualistic=0, competitive=1).  \n";
-    print "        -- It accepts an indefinite number of header lines starting with # \n";
-    print "        -- Networks with particular formats: \n";
+    print "        --- If the network has no types,  either you use the general format (with -t 1)  and all your types are the same,\n";
+    print "            or if you use -t 0 then the file can be simply formatted as:\n";
+    print "                            NodeA   NodeB   Weight\n";
+    print "        --- If the network has no types and no weights, either you use the general format (with -t 1 and -w 1) ,\n";
+    print "           and all your types are the same and weights equal to one or you use -t 0 and -w 0,\n";
+    print "           in which case the file can be simply formatted as:\n";
+    print "                            NodeA   NodeB  \n";	
     print "\n";
     print " OUTPUT: A file describing a similarity matrix of the format:\n";
     print "         NodeA   NodeB   TanimotoCoeff  JaccardCoeff\n";
     print "\n";
-    print " USAGE: ./NodeSimilarity -w 1 -d 1 -f path2network\n";
+    print " USAGE: ./NodeSimilarity -w 1 -d 1 -t 1 -f path2network\n";
     print "\n";
     print " COMMENTS: In addition, if you want to change the order of the input columns you can code it \n";
     print "        in the function \"readParameters\".\n";

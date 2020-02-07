@@ -1,6 +1,11 @@
 
 # README for functionInk project
 
+For details of the method please see: 
+
+Pascual-García, A. & Bell, T. "functionInk: An efficient method to detect functional groups in multidimensional networks reveals the hidden structure of ecological communities". _Methods in Ecology and Evolution_ 2020
+
+
 ## Description
 
 The aim of this project is to detect communities in complex networks for
@@ -13,8 +18,6 @@ of the same cluster share the same neighbours. We say that two nodes A and B
 share a neighbour C if both are connected with C with an edge, and the
 direction and type of the edges AC and BC is of the same type.
 
-For more information about the method, see _paper_.
-
 ## Pipeline
 
 The strategy consists of several steps. 
@@ -25,6 +28,12 @@ The strategy consists of several steps.
     * In the first run, you will cluster the nodes until no significant relations are found. This should be done to obtain the different measures of the _partition density_ which will be used to determine the optimal stopping point of the clustering.
     * The analysis of the partition density can be done with the script ```nodeLinkage_analysis.R```, from which you will obtain the step at which the total, external and internal partition densities have a maxima and a summary graphic. In our experience the maxima of the internal partition density brings a partition more similar to the one that would be found with traditional methods maximizing the modularity, while the external partition density would bring you communities that we interpreted in _paper_ as _guilds_.
     * After identifying the desired stopping point, you can run again ```NodeLinkage.pl``` with a flag that indicates the step or similarity threshold were you want it to stop, and you will obtain at that point the partition of the network and the description of the communities.
+
+## Data
+
+* In the folder `fake_example` a network is provided to test the scripts. Results and figures are also provided.
+* In the folder `data` you will find a set of bipartite synthetic matrices used in the publication of the method to test its performance. The networks are labelled with the fields "Nest" and "Conn" indicating the nestedness and connectance of the matrix connecting both pools of nodes, and the label "CompConn" indicates the connectance within the pools.
+
 
 
 

@@ -3,7 +3,7 @@
 
 For details of the method please see: 
 
-Pascual-García, A. & Bell, T. "functionInk: An efficient method to detect functional groups in multidimensional networks reveals the hidden structure of ecological communities". _Methods in Ecology and Evolution_ 2020
+**Pascual-García, A. & Bell, T.** "functionInk: An efficient method to detect functional groups in multidimensional networks reveals the hidden structure of ecological communities". _Methods in Ecology and Evolution_ (2020)
 
 
 ## Description

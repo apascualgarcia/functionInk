@@ -18,6 +18,7 @@ setwd(dir)
 
 # Set the input file and label for the output file
 file.hist="history file name"
+label="something" # a string with a description for your output file
 
 # ---- STOP EDITING HERE 
 

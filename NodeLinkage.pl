@@ -483,7 +483,7 @@ sub readParameters{
     }
     # Check that all the parameters are loaded, otherwise assign a default
     if((!$loadVar{"-fn"})||(!$loadVar{"-fs"})){
-	print ">>> Error! Missing mandatory input files \n";
+	print ">>> Error! Missing required input files \n";
 	&abort();
     }else{
 	$fieldNodeSimA=0; # Indicate the column where the first source node is found minus one
@@ -800,13 +800,15 @@ sub helpme{
     print "\n";
     print " >> Help! for NodeLinkage.pl\n";
     print " >> \n";
-    print " >> INPUT: All the inputs, mandatory and optional, are introduced with a flag: \n";
-    print " >> - Mandatory arguments \n";
+    print " >> INPUT: All the inputs, required and optional, are introduced with a flag: \n";
+    print " >> - Required arguments \n";
     print " >> \n";
     print " >>      -fs path_to_file \n";
-    print " >>          A tab-separated long-formatted-matrix  with the topological similarity between nodes as computed by  \n";
+    print " >>          A tab-separated long-formatted-matrix with the all-against all topological similarity between nodes, as computed by  \n";
     print " >>          NodeSimilarity.pl, with the format:     \n";
-    print " >>                 NodeA NodeB  Similarity1 Similarity2, .... \n";
+    print " >>                 NodeA NodeB  Similarity1(A,B) Similarity2(A,B) .... \n";
+    print " >>                 NodeA NodeC  Similarity1(A,C) Similarity2(A,C) .... \n";    
+    print " >>                 .... \n";
     print " >> \n";
     print " >>      -fn  path_to_file \n";
     print " >>         A tab-separated network from which the above similarity matrix was derived, i.e. the input of NodeSimilarity.pl, with the format: \n";
@@ -830,21 +832,21 @@ sub helpme{
     print " >>         Where method determines the clustering method. Valid arguments are \"Average\" for Average linkage, \n";
     print " >>         \"Single\" for single linkage and  \"Complete\" for complete linkage. Default is Average. \n";
     print " >> \n";
-    print " >>     -s stop criteria \n";
-    print " >>         Where criteria is a string determining a stopping criteria for the clustering, that may be a threshold in  \n";
-    print " >>         the similarity (argument \"thres\") a stopping point (\"step\") or no stop (it will cluster until \n";
-    print " >>         there is a single cluster, argument \"none\"). Default value is \"none\" \n";
+    print " >>     -s stop_criteria \n";
+    print " >>         Where stop_criteria is a string determining a criteria to stop the clustering. It may be a threshold in  \n";
+    print " >>         the similarity (argument \"thres\") a stopping point (\"step\"), or we may want to cluster until \n";
+    print " >>         there is a single cluster, in which case the argument should be \"none\"). Default value is \"none\" \n";
     print " >> \n";
     print " >>     -v value \n";
-    print " >>         If a stopping criteria is given, this flag must be used to include either a value that would \n";
-    print " >>         be either a threshold for the similarity criteria or a step for the step criteria. \n";
+    print " >>         If a stop criteria is given, this flag must be used to include either a value that would \n";
+    print " >>         be either a threshold (for the similarity criteria) or a clustering step (for the step criteria). \n";
     print " >> \n";
     print " >>  OUTPUT:  \n";    
     print " >>     A list of files: \n";
-    print " >>     - If there is no stopping criteria given: \n";
+    print " >>     - If it is not given any no stop criteria: \n";
     print " >>          HistExtend.NoStop.InputFile \n";
     print " >>          HistCompact.NoStop.InputFile \n";
-    print " >>     - With stopping criteria: \n";
+    print " >>     - With a stop criteria: \n";
     print " >>          HistExtend.StopCriteria.InputFile \n";
     print " >>          HistCompact.StopCriteria.InputFile \n";
     print " >>          Clusters.StopCriteria.InputFile  \n";
@@ -852,8 +854,8 @@ sub helpme{
     print " >>     -where: \n";
     print " >>       -- HistExtend file: explicitly describes the clustering process, showing the two clusters \n";
     print " >>          that are clustered (its nodes, edges, etc.) \n";
-    print " >>       -- HistCompact file:provides the relevant quantities of the two clusters joined (number of edges, \n";
-    print " >>          number of elements contained) and of the clustering, step, partition densities, etc.	\n";
+    print " >>       -- HistCompact file: it only provides relevant quantities of the two clusters joined (number of edges, \n";
+    print " >>          number of elements contained), and of the clustering, (step, partition densities, etc.)	\n";
     print " >>       -- Clusters file: Describes the different clusters at the stopping point \n";
     print " >>       -- Partition file: A vector assigning to each node the cluster id it belongs to. \n";
     print " >> EXAMPLE USAGE:  \n";

@@ -38,5 +38,31 @@ The detection of communities in a network considers several steps. One of the re
 
 The scripts do not require any installation, but the computer should have a Perl interpreter. Most Unix distributions come with a Perl interpreter, if you are running a different OS you can find more information [in this page](https://perldoc.perl.org/5.32.0/perlfaq2.html#What-machines-support-Perl%3f-Where-do-I-get-it%3f). Similarly, the script for the analysis requires R.
 
+The script uses two modules (`POSIX` and `Scalar::Util`) and the latter may not come installed alongside your Perl native installation. An easy way to install modules is via [CPAN](https://www.cpan.org/modules/INSTALL.html). Once you have CPAN installed you can install modules (see [this post](https://perlmaven.com/how-to-install-a-perl-module-from-cpan) for more details and installation in operating systems different than Linux and [this post](https://ostechnix.com/how-to-install-perl-modules-on-linux/) for other alternatives in Linux.
+
+In Linux, first open a CPAN shell:
+
+```
+$> sudo perl -MCPAN -e shell
+```
+And then install, the required module:
+
+```
+$CPAN> install Scalar::Util
+```
+
+## Frequent problems
+
+* Your file is not formatted correctly:
+   * It is not tab-separated.
+   * The header does not start with `#`.
+   * The columns do not have the correct order.
+
+* Your file has weights equal to zero. T
+   * The links does not exist, and the algorithm does not know how to deal with it, these links should be removed.
+
+* The algorith returns a message like `The value for network weight argument (-w) is not numeric = 1`. In that case either:
+   * You do not have installed the module `Scalar::Util`
+   * You are working in an environment with a Perl version that do nothave the modules installed.
 
 

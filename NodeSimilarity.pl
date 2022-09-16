@@ -1,4 +1,4 @@
-#!/usr/bin/env perl -w
+#!/usr/bin/env perl 
 # ******************************
 # * NodeSimilarity.pl             *
 # ******************************
@@ -46,7 +46,7 @@
 # OUTPUT: A file describing a similarity matrix of the format:
 #         NodeA   NodeB   TanimotoCoeff  JaccardCoeff
 #
-# USAGE: ./NodeSimilarity -w 1 -d 1 -f $path2network
+# USAGE: ./NodeSimilarity.pl -w 1 -d 1 -f $path2network
 #
 #        In addition, if you want to change the order of the input columns you can control it 
 #        in the first section "parameters".
@@ -268,6 +268,7 @@ for($i=0; $i<$Nnodes; $i++){ # Edge 1
 		}	    
 	    } # End foreach neighbour $j
 	} # End foreach neighbour $i
+	#print join(', ',' *** Control: nodeA',$nodeA,'Waa',$node2aa{$nodeA},' nodeB:',$nodeB,' Wbb',$node2aa{$nodeB},'Wab',$Wab),"\n"; # DEBUG
 	$NneighsA=$#{$neighbour{$nodeA}};#+1; # As usual, check this +1. Now is not needed, because we have already one more neigh (the node itself)
 	$NneighsB=$#{$neighbour{$nodeB}};#+1;	
 	$Tanimoto=$Wab/($node2aa{$nodeA}+$node2aa{$nodeB}-$Wab);
@@ -494,7 +495,7 @@ sub helpme{
     print " OUTPUT: A file describing a similarity matrix of the format:\n";
     print "         NodeA   NodeB   TanimotoCoeff  JaccardCoeff\n";
     print "\n";
-    print " USAGE: ./NodeSimilarity -w 1 -d 1 -t 1 -f path2network\n";
+    print " USAGE: ./NodeSimilarity.pl -w 1 -d 1 -t 1 -f path2network\n";
     print "\n";
     print " COMMENTS: In addition, if you want to change the order of the input columns you can code it \n";
     print "        in the function \"readParameters\".\n";

@@ -15,12 +15,6 @@
 # share the same type of relationships between these partners.
 # We modify the similarity for both the Jaccard measure (which do
 # not consider a weighted network) and Tanimoto coefficients (weighted).
-# If your network is not weighted, the weight will be fixed to 1
-# and Tanimoto coefficients will be computed accordingly. You should indicate
-# this in the "parameters" section of the code. Finally, if your network
-# is not weighted but you consider two types of nodes, you should
-# provide as "Weight" two values (+1 and +1) and tell to the
-# script that the network is weighted.
 #
 # FLAGS: -h  Prints a help message
 #        -w  equal to 0 if the network is not weighted, to 1 otherwise.
@@ -55,9 +49,8 @@
 #########################################
 # Silwood Park (Imperial College London)
 # July 4th, 2016. Alberto Pascual-García 
-# alberto.pascual.garcia@gmail.com
 # apascualgarcia.github.io
-# Updated in June, 2018.
+# Updated in September, 2022.
 # Zürich, Theoretical Biology (ETH)
 #########################################
 #
@@ -111,8 +104,17 @@ foreach $line(@INTMP){ #  For each line "nodeA nodeB weight type"
 	$type = "1";
 	$weight=$fields[$fieldWeight];	    
     }else{
-	$weight=$fields[$fieldWeight];
-	$type=$fields[$fieldType];
+	if($Weighted==1){ # weight and type are provided
+	    $weight=$fields[$fieldWeight];
+	    $type=$fields[$fieldType];
+	}else{ # only weight is provided, but the sign determines the type
+	    $weight=$fields[$fieldWeight];
+	    if($weight >= 0){		
+		$type= "1";
+	    }else{		
+		$type= "0";
+	    }
+	}
     }
     if($ctrl < 10){
 	print "~~~ Reading fields: nodeA = $nodeA,nodeB= $nodeB, type= $type, weight = $weight, \n";
@@ -305,7 +307,7 @@ print '  ',"\n";
 
 sub readParameters{
     
-    $messageOk{"-w"}="~~~ The network is weighted=1/unweighted=0? Value = ";
+    $messageOk{"-w"}="~~~ The network is weighted=1 or 2/unweighted=0? Value = ";
     $messageOk{"-d"}="~~~ The network is directed=1/undirected=0? Value = ";
     $messageOk{"-t"}="~~~ The network has different types=1/or a single type=0? Value = ";
     $messageOk{"-f"}="~~~ The network file is = ";
@@ -397,9 +399,14 @@ sub printParameters{
 	print '~~~ Working with a network with a single type of link',"\n"; 
     }else{
 	print '~~~ Working with a weighted network -- Tanimoto coefficient',"\n";
-	print '~~~ Working with a network with different types of links',"\n"; 
-	print '~~~ Reading weights from column ',$fieldWeight+1,"\n";
-	print '~~~ Reading types from column ',$fieldType+1,"\n";
+	print '~~~ Working with a network with different types of links',"\n";
+	if($Weighted==1){
+	    print '~~~ Reading weights from column ',$fieldWeight+1,"\n";
+	    print '~~~ Reading types from column ',$fieldType+1,"\n";
+	}else{
+	    print '~~~ Reading weights from column ',$fieldWeight+1,"\n";
+	    print '~~~ Inferring types from the sign of the weights',"\n";
+	}
     }
     print '  ',"\n";
     
@@ -438,7 +445,9 @@ sub helpme{
     print " >> Help for NodeSimilarity.pl\n";
     print "\n";
     print " FLAGS: -h  Prints a help message \n";
-    print "        -w  equal to 0 if the network is not weighted, to 1 otherwise (required).\n";
+    print "        -w  equal to 0 if the network is not weighted, to 1 otherwise (required). If the value is equal to 2 \n";
+    print "            the sign of the weight will be used to create two types (type = A if weight >=0 and type = B otherwise).  \n";
+    print "            The flag -t should be fixed to 1, since types exist, but no column should be provided.  \n";
     print "        -d  equal to 0 if the network is undirected, to 1 otherwise (required).\n";
     print "        -t  equal to 0 if the links are of the same type, to 1 if they are of different types (required). \n";
     print "        -f  flag to include the input file (required).\n";

@@ -1,0 +1,103 @@
+# >> Output from NodeLinkage.pl <<
+# >> Input file 1: "Nodes-Similarities_Rmrz89_Exhaust_Nest0.6_Conn0.08_CompConn0.15.long.txt
+# >> Input file 2: "Rmrz89_Exhaust_Nest0.6_Conn0.08_CompConn0.15.long.txt
+# >> Clustering of nodes with the Average Linkage method
+# >> Recovering classification at step: 47
+# >> Running at date:  (mm,dd,yy) 8, 20, 2022, and time: 1:36:42,
+# >> Silwood Park, Imperial College London, A.P-G.
+# 
+# >>1Node,  2ClusterId
+# Partitions at Step/Threshold: 47 0.20356097028712
+An_40	1
+An_39	1
+An_21	1
+An_17	1
+An_29	1
+An_16	1
+Pl_38	2
+An_20	3
+An_19	3
+An_42	4
+An_38	5
+An_30	5
+An_33	6
+Pl_26	7
+An_2	8
+Pl_20	9
+Pl_17	9
+Pl_37	9
+Pl_32	9
+Pl_39	10
+Pl_45	10
+Pl_42	10
+Pl_21	10
+Pl_44	11
+Pl_19	11
+An_14	12
+An_11	12
+An_25	12
+Pl_12	13
+Pl_14	13
+Pl_22	14
+Pl_3	15
+Pl_9	15
+Pl_8	15
+An_26	16
+An_7	17
+An_3	17
+An_6	17
+An_4	17
+An_8	17
+Pl_46	18
+Pl_35	18
+An_22	19
+An_44	19
+Pl_31	20
+Pl_13	20
+Pl_28	20
+Pl_47	20
+An_1	21
+Pl_36	22
+Pl_29	22
+Pl_43	22
+Pl_18	22
+Pl_40	23
+Pl_23	23
+Pl_34	24
+Pl_11	25
+Pl_5	25
+An_37	26
+An_34	27
+An_32	27
+An_12	28
+An_13	28
+An_23	29
+Pl_10	30
+Pl_15	31
+Pl_16	31
+An_31	32
+An_36	32
+Pl_30	33
+Pl_25	33
+Pl_33	34
+An_24	35
+An_45	35
+Pl_24	36
+Pl_27	37
+An_5	38
+An_9	38
+Pl_2	39
+An_18	40
+An_15	40
+An_10	40
+An_46	41
+An_35	42
+An_28	42
+Pl_7	43
+Pl_41	43
+Pl_4	44
+Pl_6	44
+Pl_1	44
+An_27	45
+An_43	46
+An_41	46

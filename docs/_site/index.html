@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- Beautiful Jekyll 5.0.0 | Copyright Dean Attali 2020 -->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  
+
+  
+
+  <title>-functionink- Functional groups linkage</title>
+
+  
+  <meta name="author" content="Alberto Pascual-García">
+  
+
+  <meta name="description" content="A method for community detection in multiplex networks.">
+
+  
+
+  
+
+  <link rel="alternate" type="application/rss+xml" title="" href="http://localhost:4000/feed.xml">
+
+  
+
+  
+
+  
+
+  
+
+
+  
+    
+      
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+
+    
+      
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+
+
+    
+      
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic">
+
+
+    
+      
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800">
+
+
+    
+  
+
+  
+    
+      <link rel="stylesheet" href="/assets/css/bootstrap-social.css">
+    
+      <link rel="stylesheet" href="/assets/css/beautifuljekyll.css">
+    
+  
+
+  
+
+  
+  
+  
+
+  
+
+  <meta property="og:title" content="-functionink- Functional groups linkage">
+  <meta property="og:description" content="A method for community detection in multiplex networks.">
+
+  
+  <meta property="og:image" content="http://localhost:4000/assets/img/NodesSimilarity.png">
+  
+
+  
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="http://localhost:4000/">
+  <link rel="canonical" href="http://localhost:4000/">
+  
+
+  
+  <meta name="twitter:card" content="summary_large_image">
+  
+  <meta name="twitter:site" content="@">
+  <meta name="twitter:creator" content="@">
+
+  <meta property="twitter:title" content="-functionink- Functional groups linkage">
+  <meta property="twitter:description" content="A method for community detection in multiplex networks.">
+
+  
+  <meta name="twitter:image" content="http://localhost:4000/assets/img/NodesSimilarity.png">
+  
+
+  
+
+
+  
+
+  
+
+</head>
+
+
+<body>
+
+  
+
+
+  <nav class="navbar navbar-expand-xl navbar-light fixed-top navbar-custom top-nav-regular"><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="main-navbar">
+    <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/_pages/Install">Install</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/_pages/Vignette">Vignette</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/_pages/Visualization">Visualization</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/_pages/Issues">Issues</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://github.com/apascualgarcia/functionInk">Repository</a>
+          </li>
+        <li class="nav-item">
+          <a class="nav-link" id="nav-search-link" href="#" title="Search">
+            <span id="nav-search-icon" class="fa fa-search"></span>
+            <span id="nav-search-text">Search</span>
+          </a>
+        </li></ul>
+  </div>
+
+  
+
+  
+
+</nav>
+
+
+
+<div id="beautifuljekyll-search-overlay">
+
+  <div id="nav-search-exit" title="Exit search">✕</div>
+  <input type="text" id="nav-search-input" placeholder="Search">
+  <ul id="search-results-container"></ul>
+  
+  <script src="https://unpkg.com/simple-jekyll-search@latest/dest/simple-jekyll-search.min.js"></script>
+  <script>
+    var searchjson = '[ \
+       \
+        { \
+          "title"    : "Sample blog post", \
+          "category" : "test", \
+          "url"      : "/2020-02-28-test-markdown/", \
+          "date"     : "February 28, 2020" \
+        }, \
+       \
+        { \
+          "title"    : "Flake it till you make it", \
+          "category" : "bookstest", \
+          "url"      : "/2020-02-26-flake-it-till-you-make-it/", \
+          "date"     : "February 26, 2020" \
+        }, \
+       \
+       \
+        { \
+          "title"    : "Disclaimer", \
+          "category" : "page", \
+          "url"      : "/Disclaimer/", \
+          "date"     : "January 1, 1970" \
+        }, \
+       \
+        { \
+          "title"    : "Install", \
+          "category" : "page", \
+          "url"      : "/_pages/Install/", \
+          "date"     : "January 1, 1970" \
+        }, \
+       \
+        { \
+          "title"    : "Issues", \
+          "category" : "page", \
+          "url"      : "/_pages/Issues/", \
+          "date"     : "January 1, 1970" \
+        }, \
+       \
+        { \
+          "title"    : "Vignette", \
+          "category" : "page", \
+          "url"      : "/_pages/Vignette/", \
+          "date"     : "January 1, 1970" \
+        }, \
+       \
+        { \
+          "title"    : "Visualization", \
+          "category" : "page", \
+          "url"      : "/_pages/Visualization/", \
+          "date"     : "January 1, 1970" \
+        }, \
+       \
+        { \
+          "title"    : "Help", \
+          "category" : "page", \
+          "url"      : "/_pages/help/", \
+          "date"     : "January 1, 1970" \
+        }, \
+       \
+        { \
+          "title"    : "My website", \
+          "category" : "page", \
+          "url"      : "/", \
+          "date"     : "January 1, 1970" \
+        }, \
+       \
+        { \
+          "title"    : "-functionink- Functional groups linkage", \
+          "category" : "page", \
+          "url"      : "/", \
+          "date"     : "January 1, 1970" \
+        }, \
+       \
+        { \
+          "title"    : "Tag Index", \
+          "category" : "page", \
+          "url"      : "/tags/", \
+          "date"     : "January 1, 1970" \
+        } \
+       \
+    ]';
+    searchjson = JSON.parse(searchjson);
+
+    var sjs = SimpleJekyllSearch({
+      searchInput: document.getElementById('nav-search-input'),
+      resultsContainer: document.getElementById('search-results-container'),
+      json: searchjson
+    });
+  </script>
+</div>
+
+
+
+
+
+  <!-- TODO this file has become a mess, refactor it -->
+
+
+
+
+
+
+  <div id="header-big-imgs" data-num-img=6
+    
+    
+    
+      
+      data-img-src-1="http://localhost:4000/assets/img/NodesSimilarity.png"
+      data-img-desc-1="Nodes similarity"
+    
+    
+    
+    
+    
+      
+      data-img-src-2="http://localhost:4000/assets/img/BlockModelling_Vs_Amaral.png"
+      data-img-desc-2="Comparison of methods"
+    
+    
+    
+    
+    
+      
+      data-img-src-3="http://localhost:4000/assets/img/Guilds.png"
+      data-img-desc-3="Guilds"
+    
+    
+    
+    
+    
+      
+      data-img-src-4="http://localhost:4000/assets/img/Guild_Vs_Module.png"
+      data-img-desc-4="Guild Vs. Module"
+    
+    
+    
+    
+    
+      
+      data-img-src-5="http://localhost:4000/assets/img/PartitionDensity.png"
+      data-img-desc-5="Partition density"
+    
+    
+    
+    
+    
+      
+      data-img-src-6="http://localhost:4000/assets/img/Entangled_Bank.png"
+      data-img-desc-6="The bank disentangled"
+    
+    
+    
+  ></div>
+
+
+<header class="header-section has-img">
+
+<div class="big-img intro-header">
+  <div class="container-md">
+    <div class="row">
+      <div class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
+        <div class="page-heading">
+          <h1>-functionink- Functional groups linkage</h1>
+          
+            
+              <hr class="small">
+              <span class="page-subheading">A method for community detection in multiplex networks.</span>
+            
+          
+
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  <span class='img-desc'></span>
+</div>
+
+<div class="intro-header no-img">
+  <div class="container-md">
+    <div class="row">
+      <div class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
+        <div class="page-heading">
+          <h1>-functionink- Functional groups linkage</h1>
+          
+            
+              <hr class="small">
+              <span class="page-subheading">A method for community detection in multiplex networks.</span>
+            
+          
+
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</header>
+
+
+
+
+
+<div class=" container-md " role="main">
+  <div class="row">
+    <div class=" col-xl-8 offset-xl-2 col-lg-10 offset-lg-1 ">
+      
+
+      <h2 id="description">Description</h2>
+
+<p>The aim of this project is to detect communities in complex networks in
+which we have not only a weight and/or direction in the edges, but also
+a qualitative label describing the type of links. Having different types of links
+increases the complexity in the detection of communities, because our definition of
+community may require that members of the same community have links of the same type only.</p>
+
+<p>Considering types of links also facilitates to naturally encode <em>multiplex networks</em>, in which nodes are distributed
+in different layers. Links within layers will be encoded with one type of link for each layer, and
+links between layers by simply adding a new type for each set of links connecting a pair of layers. This leads
+to a very flexible way to find communities in otherwise very complicated networks.</p>
+
+<p>The strategy is to find a partition of the network such that members
+of the same commmunity (approximately) share the same neighbours with connections of the same type and similar weights. Therefore, we say that two nodes A and B
+share a neighbour C if both are connected with C with an edge, and the
+direction and type of the edges AC and BC is of the same type.</p>
+
+<h2 id="overview-of-the-pipeline">Overview of the pipeline</h2>
+
+<p>The strategy to detect communities in a network considers several steps. For more details please follow the <a href="./_pages/Vignette">Vignette</a></p>
+
+<ul>
+  <li>Compute from your network a similarity measure between the nodes. This similarity will be  higher if the nodes share the same neighbours with the same type of links. For this task, we use the script  <code class="language-plaintext highlighter-rouge">NodeSimilarity.pl</code>.  See the <a href="_pages/help">help</a> page to explore the options.</li>
+  <li>With the similarity matrix obtained we cluster the nodes with an agglomerative algorithm twice:
+    <ul>
+      <li>In the first run, we cluster the nodes until no significant relations are found. During this computation, the algorithm will compute different measures of <em>partition density</em> which will be used to estimate the optimal stopping point of the clustering. Depending on the measure used, we can identify an optimal point for the two types of communities that the method identifies, <em>guilds</em> or  <em>modules</em> (see publication below for details). We use the script <code class="language-plaintext highlighter-rouge">NodeLinkage.pl</code>. See the <a href="_pages/help">help</a> page to explore the options.</li>
+      <li>Analyse the partition densities. We identify the maxima of these quantities, which determine the clustering stopping point in which we want to obtain the communities. As we mentioned, the stopping point will correspond to one of the maxima in the partition densities. In our experience, the maxima of the internal partition density brings a partition more similar to the one that would be found with traditional methods maximizing the modularity, while the external partition density would bring you communities that we interpreted in <em>Pascual-García &amp; Bell</em> as <em>guilds</em>. To extract the maxima please use the R function  <code class="language-plaintext highlighter-rouge">extractPartDensity.R</code>, whose use is illustrated in the script <code class="language-plaintext highlighter-rouge">nodeLinkage_analysis.R</code></li>
+      <li>After identifying the desired stopping point, we run again the agglomerative clustering with an option to indicate the step or similarity threshold in which we want to stop the algorithm. We will obtain at that point the partition of the network (i.e. an id identifying the community each node belongs) and the description of the communities.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="data">Data</h2>
+
+<ul>
+  <li>In the folder <code class="language-plaintext highlighter-rouge">fake_example</code> a network is provided to test the scripts. Results and figures are also provided. See the <a href="_pages/Install">Install</a> page for details.</li>
+  <li>In the folder <code class="language-plaintext highlighter-rouge">data</code> you will find a set of bipartite synthetic matrices used in the publication of the method to test its performance. The networks are labelled with the fields “Nest” and “Conn” indicating the nestedness and connectance of the matrix connecting both pools of nodes, and the label “CompConn” indicates the connectance within the pools. See the <a href="_pages/Vignette">Vignette</a> for details.</li>
+</ul>
+
+<h2 id="citation">Citation</h2>
+
+<p>If you use this method please cite:</p>
+
+<p><strong>Pascual-García, A. &amp; Bell, T.</strong>  (2020). functionInk: An efficient method to detect functional groups in multidimensional networks reveals the hidden structure of ecological communities. <em>Methods in Ecology and Evolution</em>, 11(7), 804-817.</p>
+
+
+
+      
+
+      
+
+    </div>
+  </div>
+</div>
+
+
+  <footer>
+  <div class="container-md beautiful-jekyll-footer">
+    <div class="row">
+      <div class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
+      <ul class="list-inline text-center footer-links"><li class="list-inline-item">
+    <a href="https://github.com/https://apascualgarcia.github.io/" title="GitHub">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">GitHub</span>
+   </a>
+  </li><li class="list-inline-item">
+    <a href="https://scholar.google.com/https://scholar.google.com/citations?user=PuYGU-YAAAAJ&hl=es&oi=ao" title="Google Scholar">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fa fa-graduation-cap fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">Google Scholar</span>
+    </a>
+  </li></ul>
+
+      
+      <p class="copyright text-muted">
+      
+        Alberto Pascual-García
+        &nbsp;&bull;&nbsp;
+      
+      2022
+
+      
+        &nbsp;&bull;&nbsp;
+        <span class="author-site">
+          <a href="http://localhost:4000/">apascualgarcia.github.io</a>
+        </span>
+      
+
+      
+      </p>
+      <p class="theme-by text-muted">
+        Powered by
+        <a href="https://beautifuljekyll.com">Beautiful Jekyll</a>
+      </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+  
+  
+    
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
+
+
+  
+    
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+
+
+  
+    
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+
+  
+
+
+
+  
+    <!-- doing something a bit funky here because I want to be careful not to include JQuery twice! -->
+    
+      <script src="/assets/js/beautifuljekyll.js"></script>
+    
+  
+
+
+
+
+
+
+
+
+
+</body>
+</html>

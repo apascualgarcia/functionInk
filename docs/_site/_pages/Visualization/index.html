@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- Beautiful Jekyll 5.0.0 | Copyright Dean Attali 2020 -->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  
+
+  
+
+  <title>Visualization</title>
+
+  
+  <meta name="author" content="Alberto Pascual-García">
+  
+
+  <meta name="description" content="Last update September 2022">
+
+  
+
+  
+
+  <link rel="alternate" type="application/rss+xml" title="" href="http://localhost:4000/feed.xml">
+
+  
+
+  
+
+  
+
+  
+
+
+  
+    
+      
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+
+    
+      
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+
+
+    
+      
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic">
+
+
+    
+      
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800">
+
+
+    
+  
+
+  
+    
+      <link rel="stylesheet" href="/assets/css/bootstrap-social.css">
+    
+      <link rel="stylesheet" href="/assets/css/beautifuljekyll.css">
+    
+  
+
+  
+
+  
+  
+  
+
+  
+
+  <meta property="og:title" content="Visualization">
+  <meta property="og:description" content="Last update September 2022">
+
+  
+
+  
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="http://localhost:4000/_pages/Visualization/">
+  <link rel="canonical" href="http://localhost:4000/_pages/Visualization/">
+  
+
+  
+  <meta name="twitter:card" content="summary">
+  
+  <meta name="twitter:site" content="@">
+  <meta name="twitter:creator" content="@">
+
+  <meta property="twitter:title" content="Visualization">
+  <meta property="twitter:description" content="Last update September 2022">
+
+  
+
+  
+
+
+  
+
+  
+
+</head>
+
+
+<body>
+
+  
+
+
+  <nav class="navbar navbar-expand-xl navbar-light fixed-top navbar-custom top-nav-regular"><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="main-navbar">
+    <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/_pages/Install">Install</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/_pages/Vignette">Vignette</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/_pages/Visualization">Visualization</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/_pages/Issues">Issues</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://github.com/apascualgarcia/functionInk">Repository</a>
+          </li>
+        <li class="nav-item">
+          <a class="nav-link" id="nav-search-link" href="#" title="Search">
+            <span id="nav-search-icon" class="fa fa-search"></span>
+            <span id="nav-search-text">Search</span>
+          </a>
+        </li></ul>
+  </div>
+
+  
+
+  
+
+</nav>
+
+
+
+<div id="beautifuljekyll-search-overlay">
+
+  <div id="nav-search-exit" title="Exit search">✕</div>
+  <input type="text" id="nav-search-input" placeholder="Search">
+  <ul id="search-results-container"></ul>
+  
+  <script src="https://unpkg.com/simple-jekyll-search@latest/dest/simple-jekyll-search.min.js"></script>
+  <script>
+    var searchjson = '[ \
+       \
+        { \
+          "title"    : "Sample blog post", \
+          "category" : "test", \
+          "url"      : "/2020-02-28-test-markdown/", \
+          "date"     : "February 28, 2020" \
+        }, \
+       \
+        { \
+          "title"    : "Flake it till you make it", \
+          "category" : "bookstest", \
+          "url"      : "/2020-02-26-flake-it-till-you-make-it/", \
+          "date"     : "February 26, 2020" \
+        }, \
+       \
+       \
+        { \
+          "title"    : "Disclaimer", \
+          "category" : "page", \
+          "url"      : "/Disclaimer/", \
+          "date"     : "January 1, 1970" \
+        }, \
+       \
+        { \
+          "title"    : "Install", \
+          "category" : "page", \
+          "url"      : "/_pages/Install/", \
+          "date"     : "January 1, 1970" \
+        }, \
+       \
+        { \
+          "title"    : "Issues", \
+          "category" : "page", \
+          "url"      : "/_pages/Issues/", \
+          "date"     : "January 1, 1970" \
+        }, \
+       \
+        { \
+          "title"    : "Vignette", \
+          "category" : "page", \
+          "url"      : "/_pages/Vignette/", \
+          "date"     : "January 1, 1970" \
+        }, \
+       \
+        { \
+          "title"    : "Visualization", \
+          "category" : "page", \
+          "url"      : "/_pages/Visualization/", \
+          "date"     : "January 1, 1970" \
+        }, \
+       \
+        { \
+          "title"    : "Help", \
+          "category" : "page", \
+          "url"      : "/_pages/help/", \
+          "date"     : "January 1, 1970" \
+        }, \
+       \
+        { \
+          "title"    : "My website", \
+          "category" : "page", \
+          "url"      : "/", \
+          "date"     : "January 1, 1970" \
+        }, \
+       \
+        { \
+          "title"    : "-functionink- Functional groups linkage", \
+          "category" : "page", \
+          "url"      : "/", \
+          "date"     : "January 1, 1970" \
+        }, \
+       \
+        { \
+          "title"    : "Tag Index", \
+          "category" : "page", \
+          "url"      : "/tags/", \
+          "date"     : "January 1, 1970" \
+        } \
+       \
+    ]';
+    searchjson = JSON.parse(searchjson);
+
+    var sjs = SimpleJekyllSearch({
+      searchInput: document.getElementById('nav-search-input'),
+      resultsContainer: document.getElementById('search-results-container'),
+      json: searchjson
+    });
+  </script>
+</div>
+
+
+
+
+
+  <!-- TODO this file has become a mess, refactor it -->
+
+
+
+
+
+
+
+<header class="header-section ">
+
+<div class="intro-header no-img">
+  <div class="container-md">
+    <div class="row">
+      <div class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
+        <div class="page-heading">
+          <h1>Visualization</h1>
+          
+            
+              <hr class="small">
+              <span class="page-subheading">Last update September 2022</span>
+            
+          
+
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</header>
+
+
+
+
+
+<div class=" container-md " role="main">
+  <div class="row">
+    <div class=" col-xl-8 offset-xl-2 col-lg-10 offset-lg-1 ">
+      
+
+      <h1 id="visualization">Visualization</h1>
+
+<p>In this page we explain how to represent the communities found with functionink. We will use the results obtained in the <a href="../Vignette">Vignette</a> which can also be found in the directory <code class="language-plaintext highlighter-rouge">vignette_example</code>.</p>
+
+<p>There are many methods to plot networks. Here we illustrate a procedure with the popular software <a href="https://cytoscape.org/">Cytoscape</a> (version 3.3.0).</p>
+
+<p>First, we start Cytoscape and we select the option “From network file”:</p>
+
+<p><img src="../../_images/visualization/Cytoscape1.png" alt=" Figure 1" /></p>
+
+<p>We load the file <code class="language-plaintext highlighter-rouge">Rmrz89_Exhaust_Nest0.6_Conn0.08_CompConn0.15.long.format2.txt</code> located in the directory <code class="language-plaintext highlighter-rouge">data</code>. In “Advanced Options” we add “ignore lines starting with #” to skip the header, and unclick the option “Use first line as column headers” (<em>Note: Cytoscape sometimes does not react to these options, just click and unclick a couple of times and you will have it</em>)</p>
+
+<p><img src="../../_images/visualization/Cytoscape2.png" alt=" Figure 2" /></p>
+
+<p>Then, we edit the fields Column 1 to Column 4, indicating which is the “source node” (Column 1), the “target node” (Column 2), and fixing the type of entry to “edge attributes” for columns 3 and 4 giving a name to Column 3 (interaction) and Column 4 (type):</p>
+
+<p><img src="../../_images/visualization/Cytoscape3.png" alt=" Figure 3" /></p>
+
+<p>After renaming the columns, it should look something like this:</p>
+
+<p><img src="../../_images/visualization/Cytoscape4.png" alt=" Figure 4" /></p>
+
+<p>The network is loaded, and it looks pretty messy. Now we load the partition we obtained with functionink to shed some light on the structure. We will load the file <code class="language-plaintext highlighter-rouge">Partition-NL_Average_StopStep-47_Rmrz89_Exhaust_Nest0.6_Conn0.08_CompConn0.15.long.txt</code> found in the directory <code class="language-plaintext highlighter-rouge">vignette_example</code>. To load it we do File &gt; Import &gt; Table &gt; File and a prompt window opens. Again, we go to Advanced Options and we proceed as we did with the network (include the hash to ignore and include the first line). After editing the columns’ names it should look like this:</p>
+
+<p><img src="../../_images/visualization/Cytoscape5.png" alt=" Figure 5" /></p>
+
+<p>We are now ready to identify the communities. To simplify the visualization, we can remove competitive interactions within each pool since were randomly drawn and hence we may want to explore first mutualistic interactions, which have a high nestedness. We filter those edges with “type” equal to 2, which identify competitive links. In the tab “Select” of the Control Panel, you  can just  add one condition to filter them:</p>
+
+<p><img src="../../_images/visualization/Cytoscape6.png" alt=" Figure 6" /></p>
+
+<p>After “apply” the filter, in View &gt; Edges &gt; Hide selected edges, you will hide them. And we finally identify the communities. We go to layout &gt; Group attributes layout &gt; functionink, and Cytoscape will separate the communities.</p>
+
+<p><img src="../../_images/visualization/Cytoscape7.png" alt=" Figure 7" /></p>
+
+<p>From this representation, with a bit of manual reordering and the aesthetic possibilities that Cytoscape offers you can make a cleaner figure, as the one shown in the publication of the method. For example, in this figure we coloured the nodes according to their community, so if they are close in space and have the same colour they belong to the same community</p>
+
+<p><img src="../../_images/visualization/Cytoscape8.png" alt=" Figure 8" /></p>
+
+<p>where it is apparent the definition of guilds, except perhaps for those nodes with only one link that sometimes belong to the same community and sometimes don’t. The reason is that their split depends on the competitive interactions. So let’s bring them back and colour them differently.</p>
+
+<p><img src="../../_images/visualization/Cytoscape9.png" alt=" Figure 9" /></p>
+
+<p>And indeed these communities are split because they have different competitive links. You may want to explore more in detail specific nodes to verify the definition of guild. The Cytoscape project is found in the folder <code class="language-plaintext highlighter-rouge">vignette_example/figures</code> with the name <code class="language-plaintext highlighter-rouge">Vignette_Cytoscape.cys</code></p>
+
+
+
+      
+
+      
+
+    </div>
+  </div>
+</div>
+
+
+  <footer>
+  <div class="container-md beautiful-jekyll-footer">
+    <div class="row">
+      <div class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
+      <ul class="list-inline text-center footer-links"><li class="list-inline-item">
+    <a href="https://github.com/https://apascualgarcia.github.io/" title="GitHub">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">GitHub</span>
+   </a>
+  </li><li class="list-inline-item">
+    <a href="https://scholar.google.com/https://scholar.google.com/citations?user=PuYGU-YAAAAJ&hl=es&oi=ao" title="Google Scholar">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fa fa-graduation-cap fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">Google Scholar</span>
+    </a>
+  </li></ul>
+
+      
+      <p class="copyright text-muted">
+      
+        Alberto Pascual-García
+        &nbsp;&bull;&nbsp;
+      
+      2022
+
+      
+        &nbsp;&bull;&nbsp;
+        <span class="author-site">
+          <a href="http://localhost:4000/">apascualgarcia.github.io</a>
+        </span>
+      
+
+      
+      </p>
+      <p class="theme-by text-muted">
+        Powered by
+        <a href="https://beautifuljekyll.com">Beautiful Jekyll</a>
+      </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+  
+  
+    
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
+
+
+  
+    
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+
+
+  
+    
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+
+  
+
+
+
+  
+    <!-- doing something a bit funky here because I want to be careful not to include JQuery twice! -->
+    
+      <script src="/assets/js/beautifuljekyll.js"></script>
+    
+  
+
+
+
+
+
+
+
+
+
+</body>
+</html>

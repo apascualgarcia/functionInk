@@ -15,7 +15,7 @@
   <meta name="author" content="Alberto Pascual-García">
   
 
-  <meta name="description" content="A method for community detection in multiplex networks.">
+  <meta name="description" content="A method for community detection in multilayer networks.">
 
   
 
@@ -73,7 +73,7 @@
   
 
   <meta property="og:title" content="-functionink- Functional groups linkage">
-  <meta property="og:description" content="A method for community detection in multiplex networks.">
+  <meta property="og:description" content="A method for community detection in multilayer networks.">
 
   
   <meta property="og:image" content="http://localhost:4000/assets/img/NodesSimilarity.png">
@@ -92,7 +92,7 @@
   <meta name="twitter:creator" content="@">
 
   <meta property="twitter:title" content="-functionink- Functional groups linkage">
-  <meta property="twitter:description" content="A method for community detection in multiplex networks.">
+  <meta property="twitter:description" content="A method for community detection in multilayer networks.">
 
   
   <meta name="twitter:image" content="http://localhost:4000/assets/img/NodesSimilarity.png">
@@ -327,7 +327,7 @@
           
             
               <hr class="small">
-              <span class="page-subheading">A method for community detection in multiplex networks.</span>
+              <span class="page-subheading">A method for community detection in multilayer networks.</span>
             
           
 
@@ -348,7 +348,7 @@
           
             
               <hr class="small">
-              <span class="page-subheading">A method for community detection in multiplex networks.</span>
+              <span class="page-subheading">A method for community detection in multilayer networks.</span>
             
           
 
@@ -373,19 +373,25 @@
 
 <p>The aim of this project is to detect communities in complex networks in
 which we have not only a weight and/or direction in the edges, but also
-a qualitative label describing the type of links. Having different types of links
+a variable describing the type of links. Having different types of links
 increases the complexity in the detection of communities, because our definition of
-community may require that members of the same community have links of the same type only.</p>
+community may require that members of the same community share links of the same types.</p>
 
-<p>Considering types of links also facilitates to naturally encode <em>multiplex networks</em>, in which nodes are distributed
+<p>Considering types of links facilitates to naturally encode <em>multilayer networks</em>, in which nodes are distributed
 in different layers. Links within layers will be encoded with one type of link for each layer, and
 links between layers by simply adding a new type for each set of links connecting a pair of layers. This leads
 to a very flexible way to find communities in otherwise very complicated networks.</p>
 
 <p>The strategy is to find a partition of the network such that members
-of the same commmunity (approximately) share the same neighbours with connections of the same type and similar weights. Therefore, we say that two nodes A and B
+of the same commmunity (<em>approximately</em>) share the same neighbours. Two nodes A and B
 share a neighbour C if both are connected with C with an edge, and the
-direction and type of the edges AC and BC is of the same type.</p>
+direction and type of the edges AC and BC is of the same type. But, since each pair of nodes may share many
+neighbours, we need to objectively determine what <em>approximately</em> means, namely if there exist
+an objective method to determine sets of nodes significantly sharing neighbours between members of the same set.
+Our method achieves this goal proposing three <em>partition density</em> functions (external, internal and total) that allow
+us to objectively determine optimal partitions. Depending on the <em>partition density</em> function chosen we may detect
+different types of communities (generically called in the paper <em>functional groups</em>) and that are classified in two types: <em>modules</em>
+and <em>guilds</em>. Modules are communities whose nodes are very densely connected between members of the same community, and loosely connected with members of other communities. Guilds, on the other hand, are communities whose nodes members share many neighbours but these neighbours are outside the community, while nodes within the same community are loosely connected between them.</p>
 
 <h2 id="overview-of-the-pipeline">Overview of the pipeline</h2>
 
@@ -395,8 +401,8 @@ direction and type of the edges AC and BC is of the same type.</p>
   <li>Compute from your network a similarity measure between the nodes. This similarity will be  higher if the nodes share the same neighbours with the same type of links. For this task, we use the script  <code class="language-plaintext highlighter-rouge">NodeSimilarity.pl</code>.  See the <a href="_pages/help">help</a> page to explore the options.</li>
   <li>With the similarity matrix obtained we cluster the nodes with an agglomerative algorithm twice:
     <ul>
-      <li>In the first run, we cluster the nodes until no significant relations are found. During this computation, the algorithm will compute different measures of <em>partition density</em> which will be used to estimate the optimal stopping point of the clustering. Depending on the measure used, we can identify an optimal point for the two types of communities that the method identifies, <em>guilds</em> or  <em>modules</em> (see publication below for details). We use the script <code class="language-plaintext highlighter-rouge">NodeLinkage.pl</code>. See the <a href="_pages/help">help</a> page to explore the options.</li>
-      <li>Analyse the partition densities. We identify the maxima of these quantities, which determine the clustering stopping point in which we want to obtain the communities. As we mentioned, the stopping point will correspond to one of the maxima in the partition densities. In our experience, the maxima of the internal partition density brings a partition more similar to the one that would be found with traditional methods maximizing the modularity, while the external partition density would bring you communities that we interpreted in <em>Pascual-García &amp; Bell</em> as <em>guilds</em>. To extract the maxima please use the R function  <code class="language-plaintext highlighter-rouge">extractPartDensity.R</code>, whose use is illustrated in the script <code class="language-plaintext highlighter-rouge">nodeLinkage_analysis.R</code></li>
+      <li>In the first run, we cluster the nodes until no significant relations are found. The algorithm will compute different measures of <em>partition density</em> which will be used to estimate the optimal stopping point of the clustering. Depending on the measure used, we can identify an optimal point for the two types of communities that the method identifies, <em>guilds</em> or  <em>modules</em> (see publication below for details). We use the script <code class="language-plaintext highlighter-rouge">NodeLinkage.pl</code>. See the <a href="_pages/help">help</a> page to explore the options.</li>
+      <li>Analyse the partition densities. We identify the maxima of these quantities, which determine the clustering stopping point in which we want to obtain the communities. As we mentioned, the stopping point will correspond to one of the maxima in the partition densities. In our experience, the maxima of the internal partition density brings a partition more similar to the one that would be found with traditional methods maximizing the modularity, while the external partition density would bring you communities that we interpreted in <em>Pascual-García &amp; Bell</em> as <em>guilds</em>.  To extract the maxima please use the R function  <code class="language-plaintext highlighter-rouge">extractPartDensity.R</code>, whose use is illustrated in the script <code class="language-plaintext highlighter-rouge">nodeLinkage_analysis.R</code></li>
       <li>After identifying the desired stopping point, we run again the agglomerative clustering with an option to indicate the step or similarity threshold in which we want to stop the algorithm. We will obtain at that point the partition of the network (i.e. an id identifying the community each node belongs) and the description of the communities.</li>
     </ul>
   </li>

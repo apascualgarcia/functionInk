@@ -6,7 +6,7 @@ subtitle: Last update September 2022
 
 ### Requirements
 
-The method uses two scripts written in R and one script  in R. If you haven't used Perl in the past no worries, it is a language similar to R and you just need to have a Perl interpreter installed in your computer. Running the scripts is then easy and do not require any further installation. Similarly, the script for the analysis requires R.
+The method uses two scripts coded in Perl and one script  in R. If you haven't used Perl in the past no worries, it is a language similar to R and you just need to have a Perl interpreter installed in your computer. Running the scripts is then easy and do not require any further installation. Similarly, the script for the analysis requires R.
 
 Most Unix distributions come with a Perl interpreter so you will possibly not need to install anything, if you are running a different OS you can find more information [in this page](https://perldoc.perl.org/5.32.0/perlfaq2.html#What-machines-support-Perl%3f-Where-do-I-get-it%3f) on how to install Perl in your comp.
 
@@ -23,6 +23,8 @@ And then install, the required module:
 ```
 $CPAN> install Scalar::Util
 ```
+
+To use the R function provided you will need to have installed the package `ggplot2` to represent the partition density curves.
 
 ### Clone the repo
 

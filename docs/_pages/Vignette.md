@@ -135,7 +135,7 @@ To analyze the partition density, it is provided in the directory `scripts/analy
 
 indicating that the optimal partition is found at step 47, where the total partition density peaks. We also observe that the external partition density peaks nearby, and that its maximum is clearly higher than the internal partition density. This suggests that, in this community, guilds are more relevant than modules. Indeed, the plot that we retrieve shows that the internal partition density does not have an important contribution except in the last steps. This makes sense, because the main modules in this network are plants and pollinators, which will be retrieved when there are only two clusters. 
 
-INCLUDE FIGURE
+![ Partition Densities](../../_images/Plot_PartitionDensityVsStep.png)
 
 
 ### Obtaining communities

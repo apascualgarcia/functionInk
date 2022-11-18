@@ -3,7 +3,8 @@ layout: page
 title: Vignette
 subtitle: Last update November 2022
 toc: true
-toc_label: "Vignette Contents"
+toc_label: "Contents"
+toc_icon: "cog"
 ---
 
 

@@ -2,18 +2,28 @@
 layout: page
 title: Vignette
 subtitle: Last update November 2022
-toc: true
-toc_label: "Contents"
-toc_icon: "cog"
----
 
+---
 
 In this vignette, we analyze one of the networks provided in the repository. We assume that you
 cloned the repository in your computer and that the scripts have permissions to be executed  (see [Install](../Install) page). 
 All results obtained can be found in the directory `vignette_example`.
 
+## Table of contents
 
-# Input data format
+- [Input data format](#input-data-format)
+- [Lazy pipeline](#lazy-pipeline)
+- [Detailed pipeline](#detailed-pipeline)
+    - [Computing the similarity between nodes](#similarity-between-nodes)
+    - [Clustering nodes](#clustering-nodes)
+    - [Identifying the optimal partition](#identifying-optimal-partition)
+    - [Obtaining communities](#obtaining-communities)
+
+
+
+
+
+## Input data format <a name="input-data-format"></a>
 
 In the directory `data` we have a set of bipartite synthetic matrices used in the publication of the method to test its performance. The networks are labelled with the fields "Nest" and "Conn" indicating the nestedness and connectance of the matrix connecting both pools of nodes, and the label "CompConn" indicates the connectance within the pools. Each pool may represent a pool of species such as plants and their pollinator species (labelled animals) with links representing competition within the pools and mutualistic links between the pools.
 
@@ -61,16 +71,18 @@ Note that these formats are hard-coded, i.e. the order in which the specific col
 
 There are more complicated situations depending on whether the network is directed, etc. that can be formatted in different ways, please see the help page of the script [NodeSimilarity.pl](../help) for more details on the format.
 
-# Lazy pipeline
+<a name="lazy-pipeline"></a>
+## Lazy pipeline 
 
 In the folder `scripts/analysisR` we provide a wrapper function (`run_pipeline.R`) that automatically performs the whole pipeline, allowing the user to specify most parameters. In addition, the script `nodeLinkage_pipeline.R` provides an example on how to use it. This is the same example discussed in the "Detailed pipeline" below. We recommend using this wrapper once the pipeline is understood. In particular, an explanation of the output files is provided in the section "Detailed pipeline".
 
-
-# Detailed pipeline
+<a name="detailed-pipeline"></a>
+## Detailed pipeline 
 
 Here, we describe the different steps that the pipeline includes and how to execute the scripts and interpret the data step by step.
 
-## Similarity between nodes (`NodeSimilarity.pl`)
+<a name="similarity-between-nodes"></a>
+### Similarity between nodes (`NodeSimilarity.pl`) 
 We now start the search of communities by computing the similarity between nodes, considering the two formats discussed above. We start with the second format, in which we explicitly have a column for the type of interaction.
 
 Remember that the following commands have the root directory of the repo as working directory:
@@ -107,7 +119,8 @@ Pl_14   Pl_21   0.0781017924746104      0.0769230769230769      1       7       
 
 where we have, the identities of nodeA and nodeB in the first two columns, the Tanimoto and Jaccard coefficients in columns 3 and 4, the number of shared neighbours in column 5, and the number of neighbours of nodeA and nodeB in columns 6 and 7.
 
-## Clustering nodes (`NodeLinkage.pl`)
+<a name="clustering-nodes"></a>
+### Clustering nodes (`NodeLinkage.pl`) 
 
 The next step is clustering nodes using any of the similarity metrics we computed. In a first run, we will cluster nodes until we have all of them clustered in a single cluster. This will allow us to compute the _partition density_ metrics, which we will use to determine the optimal partition, i.e. the optimal number of communities (clusters). The algorithm requires the original network and the similarity matrix we just computed as inputs, we run:
 
@@ -146,7 +159,8 @@ There are different types of lines we can easily parse:
 
 This format will be repeated every time two clusters are joined. The second file `HistCompact-NL_Average_NoStop_$label` is a more compact description of the clustering, which basically includes the same quantities present in the line VALUES of the extended description, plus the _partition density_ values in the columns _Density_, _DensityInt_ and _DensityExt_, representing the total partition density, internal partition density, and external partition density. These are the quantities we will inspect to estimate the optimal partition.
 
-## Identifying the optimal partition (`extractPartDensity.R`).
+ <a name="identifying-optimal-partition"></a>
+### Identifying the optimal partition (`extractPartDensity.R`).
 
 To analyze the partition density, it is provided in the directory `scripts/analysisR` a function (`extractPartDensity.R`) that extracts the value of the maxima for the three types of partition density quantities, the step in which these maxima are located, and optionally returns a plot with the values at each time step. To illustrate its usage, we also provide the script `nodeLinkage_analysis.R`. Using this method in our example, we obtain the following results:
 
@@ -160,8 +174,8 @@ indicating that the optimal partition is found at step 47, where the total parti
 
 ![ Partition Densities](../../_images/Plot_PartitionDensityVsStep.png)
 
-
-## Obtaining communities
+ <a name="obtaining-communities"></a>
+### Obtaining communities
 
 We finally run the clustering with additional arguments to stop it at the desired point. We will select the step = 47, where the total partition density peaks:
 

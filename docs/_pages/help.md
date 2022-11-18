@@ -89,7 +89,7 @@ Options:
 ```
 
 
-### Options for Linkage.pl
+### Options for NodeLinkage.pl
 
 Generic call:
 
@@ -158,7 +158,7 @@ Options:
         -- Clusters file: Describes the different clusters at the stopping point 
         -- Partition file: A vector assigning to each node the cluster id it belongs to. 
   EXAMPLE USAGE:  
-   ./NodeLinkage.pl -fs path2SimilarityMatrix -fn path2OriginalNetwork -s step -v 145 -a single -c 4 
+   ./NodeLinkage.pl -fs path2SimilarityMatrix -fn path2OriginalNetwork -s step -v 145 -a Single -c 4 
   
 ```
 

@@ -4,15 +4,17 @@
 #
 # This script is an example of how to use the function extractPartDensity.R to
 # extract the maximum values of the partition densities measures. It is assumed
-# that the user is following the Vignette described in the documentation, and
-# that this script is executed with Rstudio.
+# that the user is following the Vignette described in the documentation and
+# hence that the repository was cloned, and that this script is executed with Rstudio.
+# The example is set to be executed in its location in the repository. You should
+# otherwise edit the variables root.dir and src.dir to source properly the function.
 ############################
 # USAGE: Provide path and name of the history compact file as indicated below.
 # OUTPUT: The step at which the partition densities are maximum, and a summary plot of the partition densities.
 ############################
 
 library(ggplot2)
-library(here)
+library(here) # you can skip if you use absolute paths
 
 #### START EDITING
 # --- Path to dir of history compact file

@@ -859,7 +859,7 @@ sub helpme{
     print " >>       -- Clusters file: Describes the different clusters at the stopping point \n";
     print " >>       -- Partition file: A vector assigning to each node the cluster id it belongs to. \n";
     print " >> EXAMPLE USAGE:  \n";
-    print " >>  ./NodeLinkage.pl -fs path2SimilarityMatrix -fn path2OriginalNetwork -s step -v 145 -a single -c 4 \n";
+    print " >>  ./NodeLinkage.pl -fs path2SimilarityMatrix -fn path2OriginalNetwork -s step -v 145 -a Single -c 4 \n";
     print " >>  \n";
     exit;
 }

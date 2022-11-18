@@ -1,7 +1,9 @@
 ---
 layout: page
 title: Vignette
-subtitle: Last update September 2022
+subtitle: Last update November 2022
+toc: true
+toc_label: "Vignette Contents"
 ---
 
 
@@ -9,17 +11,18 @@ In this vignette, we analyze one of the networks provided in the repository. We 
 cloned the repository in your computer and that the scripts have permissions to be executed  (see [Install](../Install) page). 
 All results obtained can be found in the directory `vignette_example`.
 
+
+## Input data format
+
+In the directory `data` we have a set of bipartite synthetic matrices used in the publication of the method to test its performance. The networks are labelled with the fields "Nest" and "Conn" indicating the nestedness and connectance of the matrix connecting both pools of nodes, and the label "CompConn" indicates the connectance within the pools. Each pool may represent a pool of species such as plants and their pollinator species (labelled animals) with links representing competition within the pools and mutualistic links between the pools.
+
 We start setting the root directory of the repo as working directory.
 
 ```
 $> cd path_to_the_repository
 ```
 
-### Format
-
-In the directory `data` we have a set of bipartite synthetic matrices used in the publication of the method to test its performance. The networks are labelled with the fields "Nest" and "Conn" indicating the nestedness and connectance of the matrix connecting both pools of nodes, and the label "CompConn" indicates the connectance within the pools. Each pool may represent a pool of species such as plants and their pollinator species (labelled animals) with links representing competition within the pools and mutualistic links between the pools.
-
-We start working with the network ```Rmrz89_Exhaust_Nest0.6_Conn0.08_CompConn0.15.long.txt```. We have a look at the format:
+We are going to work with the network ```Rmrz89_Exhaust_Nest0.6_Conn0.08_CompConn0.15.long.txt```. We have a look at the format:
 
 ```
 $> less data/Rmrz89_Exhaust_Nest0.6_Conn0.08_CompConn0.15.long.txt
@@ -57,14 +60,31 @@ Note that these formats are hard-coded, i.e. the order in which the specific col
 
 There are more complicated situations depending on whether the network is directed, etc. that can be formatted in different ways, please see the help page of the script [NodeSimilarity.pl](../help) for more details on the format.
 
+## Lazy pipeline
+
+In the folder `scripts/analysisR` we provide a wrapper function (`run_pipeline.R`) that automatically performs the whole pipeline, allowing the user to specify most parameters. In addition, the script `nodeLinkage_pipeline.R` provides an example on how to use it. This is the same example discussed in the "Detailed pipeline" below. We recommend using this wrapper once the pipeline is understood. In particular, an explanation of the output files is provided in the section "Detailed pipeline".
+
+
+## Detailed pipeline
+
+Here, we describe the different steps that the pipeline includes and how to execute the scripts and interpret the data step by step.
+
 ### Similarity between nodes (`NodeSimilarity.pl`)
-We now start the search of communities by computing the similarity between nodes, considering the two formats discussed above. We start with the second format, in which we explicitly have a column for the type of interaction. We run:
+We now start the search of communities by computing the similarity between nodes, considering the two formats discussed above. We start with the second format, in which we explicitly have a column for the type of interaction.
+
+Remember that the following commands have the root directory of the repo as working directory:
+
+```
+$> cd path_to_the_repository
+```
+
+Then, we run:
 
 ```
 ./NodeSimilarity.pl -w 1 -d 0 -t 1 -f data/Rmrz89_Exhaust_Nest0.6_Conn0.08_CompConn0.15.long.format2.txt
 ```
 
-In the options we indicated that the file has weights (`-w 1`), it is not directed (`-d 0`), and has different types of links (`-t 1`).
+In the options we indicated that the file has weights (`-w 1`), it is not directed (`-d 0`), and has different types of links (`-t 1`). See the help page of the script [NodeSimilarity.pl](../help) for more details.
 The algorithm prints some information about the number of nodes, links, etc. and it finally returns the file `Nodes-Similarities_Rmrz89_Exhaust_Nest0.6_Conn0.08_CompConn0.15.long.format2.txt`. Before inspecting this file, let's see how we can run the file for the first format, in which we do not have the column "type" but we have positive and negative links, and we want to interpret the interactions with different signs as different types. This situation is so frequent in ecological networks that we implemented a specific option `-w 2`, in which the algorithm will interpret positive and negative values as different types, with no need of a "type" column:
 
 ```
@@ -94,7 +114,9 @@ The next step is clustering nodes using any of the similarity metrics we compute
 ./NodeLinkage.pl -fn data/Rmrz89_Exhaust_Nest0.6_Conn0.08_CompConn0.15.long.txt -fs Nodes-Similarities_Rmrz89_Exhaust_Nest0.6_Conn0.08_CompConn0.15.long.txt
 ```
 
-with no further options. We obtain two files. The first file `HistExtend-NL_Average_NoStop_$label` is a detailed description of the clustering. The name of the file tell us that the default method of clustering was used (Average Linkage) with no stopping criteria. $label stands for the name of the network. We inspect the file:
+with no further options.  See the help page of the script [NodeLinkage.pl](../help) for more details of the options that the algorithm offers. 
+
+We obtain two files. The first file `HistExtend-NL_Average_NoStop_$label` is a detailed description of the clustering. The name of the file tell us that the default method of clustering was used (Average Linkage) with no stopping criteria. $label stands for the name of the network. We inspect the file:
 
 ```
 head  HistExtend-NL_Average_NoStop_Rmrz89_Exhaust_Nest0.6_Conn0.08_CompConn0.15.long.txt

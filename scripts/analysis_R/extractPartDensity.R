@@ -29,6 +29,7 @@ extractPartDensity = function(hist.comp,plot = TRUE){
   
   if(plot == TRUE){
     system(command="mkdir -p figures")
+    this.dir=getwd()
     setwd("figures")
     fileOut=paste("Plot_PartitionDensityVsStep.pdf",sep="")
     pdf(file=fileOut,width=10,height=8)
@@ -44,6 +45,7 @@ extractPartDensity = function(hist.comp,plot = TRUE){
                   axis.text = element_text(size=20),axis.title = element_text(size=24),
                   legend.text =element_text(size=18)))
     dev.off()
+    setwd(this.dir)
   }
   
   return(list("total_dens" = maxDens,"int_dens"=maxDensInt,"ext_dens"=maxDensExt,

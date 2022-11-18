@@ -74,7 +74,7 @@ There are more complicated situations depending on whether the network is direct
 <a name="lazy-pipeline"></a>
 ## Lazy pipeline 
 
-In the folder `scripts/analysisR` we provide a wrapper function (`run_pipeline.R`) that automatically performs the whole pipeline, allowing the user to specify most parameters. In addition, the script `nodeLinkage_pipeline.R` provides an example on how to use it. This is the same example discussed in the "Detailed pipeline" below. We recommend using this wrapper once the pipeline is understood. In particular, an explanation of the output files is provided in the section "Detailed pipeline".
+In the folder `scripts/analysisR` we provide a wrapper function (`run_pipeline.R`) that automatically performs the whole pipeline, allowing the user to specify most parameters. In addition, the script `nodeLinkage_pipeline.R` provides an example on how to use it. This is the same example discussed in the "Detailed pipeline" below. Although using this wrapper is recommended to prevent errors when we define the parameters, etc., it is convenient to have a look at the detailed pipeline to understand how the method works and, in particular, to find a description of the output files step by step.
 
 <a name="detailed-pipeline"></a>
 ## Detailed pipeline 
